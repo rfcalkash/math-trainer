@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math Brain 🧠</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f0e17;
+      --card: #1a1830;
+      --accent1: #ff6b6b;
+      --accent2: #ffd93d;
+      --accent3: #6bcb77;
+      --accent4: #4d96ff;
+      --text: #fffffe;
+      --muted: #a7a9be;
+      --radius: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at 20% 20%, rgba(77, 150, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(255, 107, 107, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      background: linear-gradient(135deg, var(--accent2), var(--accent1));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      text-align: center;
+      font-size: 1rem;
+      margin-bottom: 40px;
+      font-weight: 600;
+    }
+
+    .screen {
+      display: none;
+      width: 100%;
+      max-width: 700px;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .screen.active {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 30px;
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .section-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.4rem;
+      color: var(--accent2);
+      margin-bottom: 16px;
+    }
+
+    .mode-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 30px;
+      width: 100%;
+    }
+
+    .mode-btn {
+      background: var(--card);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+      color: var(--text);
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .mode-btn .icon {
+      font-size: 2.5rem;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .mode-btn .name {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.3rem;
+      margin-bottom: 6px;
+    }
+
+    .mode-btn .desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .mode-btn:hover,
+    .mode-btn.selected {
+      border-color: var(--accent4);
+      background: rgba(77, 150, 255, 0.12);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(77, 150, 255, 0.2);
+    }
+
+    .mode-btn.multiply.selected {
+      border-color: var(--accent1);
+      background: rgba(255, 107, 107, 0.12);
+      box-shadow: 0 8px 24px rgba(255, 107, 107, 0.2);
+    }
+
+    .mode-btn.plusminus.selected {
+      border-color: var(--accent3);
+      background: rgba(107, 203, 119, 0.12);
+      box-shadow: 0 8px 24px rgba(107, 203, 119, 0.2);
+    }
+
+    .option-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .opt-btn {
+      flex: 1;
+      min-width: 80px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      background: transparent;
+      color: var(--text);
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .opt-btn:hover,
+    .opt-btn.selected {
+      border-color: var(--accent2);
+      background: rgba(255, 217, 61, 0.12);
+      color: var(--accent2);
+    }
+
+    label {
+      font-weight: 700;
+      color: var(--muted);
+      font-size: 0.9rem;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent4);
+      height: 6px;
+      border-radius: 3px;
+    }
+
+    .range-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .big-btn {
+      display: block;
+      width: 100%;
+      padding: 18px;
+      border-radius: var(--radius);
+      border: none;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 10px;
+      letter-spacing: 1px;
+    }
+
+    .big-btn.start {
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      color: #1a1830;
+    }
+
+    .big-btn.start:hover {
+      transform: scale(1.02);
+      box-shadow: 0 12px 32px rgba(255, 107, 107, 0.4);
+    }
+
+    .big-btn.start:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .big-btn.submit {
+      background: linear-gradient(135deg, var(--accent3), var(--accent4));
+      color: #1a1830;
+      margin-top: 20px;
+    }
+
+    .big-btn.submit:hover {
+      transform: scale(1.02);
+      box-shadow: 0 12px 32px rgba(107, 203, 119, 0.3);
+    }
+
+    .big-btn.back {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--muted);
+      font-size: 1rem;
+      padding: 12px;
+      margin-top: 14px;
+    }
+
+    /* ── Test Screens ── */
+    .progress-bar-wrap {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--accent4), var(--accent3));
+      transition: width 0.4s ease;
+    }
+
+    .question-counter {
+      font-weight: 700;
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .live-timer {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem;
+      color: var(--accent2);
+      background: rgba(255, 217, 61, 0.1);
+      border: 1px solid rgba(255, 217, 61, 0.2);
+      border-radius: 20px;
+      padding: 4px 14px;
+      min-width: 70px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .question-display {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(3rem, 10vw, 6rem);
+      text-align: center;
+      color: var(--text);
+      padding: 40px 20px;
+      line-height: 1.1;
+    }
+
+    .question-display span.op {
+      color: var(--accent1);
+    }
+
+    .seq-display {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 220px;
+    }
+
+    .seq-number {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(3.5rem, 12vw, 7rem);
+      text-align: center;
+      opacity: 0;
+      transform: scale(0.7);
+      transition: opacity 0.25s, transform 0.25s;
+    }
+
+    .seq-number.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .seq-number.op-first {
+      color: var(--text);
+    }
+
+    .seq-number.op-plus {
+      color: var(--accent3);
+    }
+
+    .seq-number.op-minus {
+      color: var(--accent1);
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    .space-prompt {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .space-key {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.08);
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      border-bottom-width: 4px;
+      border-radius: 8px;
+      padding: 5px 18px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 0.85rem;
+      color: var(--text);
+      letter-spacing: 2px;
+    }
+
+    .space-key.pulse {
+      animation: keyPulse 0.15s ease;
+    }
+
+    @keyframes keyPulse {
+      0% {
+        transform: scale(1);
+        border-bottom-width: 4px;
+      }
+
+      50% {
+        transform: scale(0.95) translateY(2px);
+        border-bottom-width: 2px;
+        background: rgba(77, 150, 255, 0.2);
+      }
+
+      100% {
+        transform: scale(1);
+        border-bottom-width: 4px;
+      }
+    }
+
+    .seq-playing-label {
+      font-size: 0.8rem;
+      color: var(--accent4);
+      font-weight: 700;
+      opacity: 0;
+      transition: opacity 0.3s;
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    .seq-playing-label.visible {
+      opacity: 1;
+    }
+
+    /* ── Answers Screen ── */
+    .answers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .answer-item {
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .answer-item .qlabel {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .answer-item input {
+      flex: 1;
+      min-width: 0;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+      color: var(--text);
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.2rem;
+      padding: 4px 0;
+      outline: none;
+      text-align: right;
+      transition: border-color 0.2s;
+    }
+
+    .answer-item input:focus {
+      border-color: var(--accent4);
+    }
+
+    /* ── Results Screen ── */
+    .score-circle {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-family: 'Fredoka One', cursive;
+    }
+
+    .score-circle .score-num {
+      font-size: 2.5rem;
+      line-height: 1;
+    }
+
+    .score-circle .score-label {
+      font-size: 0.85rem;
+      opacity: 0.8;
+    }
+
+    .score-great {
+      background: radial-gradient(circle, rgba(107, 203, 119, 0.2), rgba(107, 203, 119, 0.05));
+      border: 3px solid var(--accent3);
+      color: var(--accent3);
+    }
+
+    .score-ok {
+      background: radial-gradient(circle, rgba(255, 217, 61, 0.2), rgba(255, 217, 61, 0.05));
+      border: 3px solid var(--accent2);
+      color: var(--accent2);
+    }
+
+    .score-bad {
+      background: radial-gradient(circle, rgba(255, 107, 107, 0.2), rgba(255, 107, 107, 0.05));
+      border: 3px solid var(--accent1);
+      color: var(--accent1);
+    }
+
+    .result-msg {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.6rem;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .time-summary {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .time-pill {
+      background: rgba(77, 150, 255, 0.1);
+      border: 1px solid rgba(77, 150, 255, 0.22);
+      border-radius: 30px;
+      padding: 8px 18px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem;
+      color: var(--accent4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      min-width: 100px;
+    }
+
+    .time-pill .pill-label {
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .sep {
+      width: 100%;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.06);
+      margin: 20px 0;
+    }
+
+    .results-list {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 380px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .result-row {
+      display: grid;
+      grid-template-columns: 44px 1fr auto;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .result-row.correct {
+      background: rgba(107, 203, 119, 0.1);
+    }
+
+    .result-row.wrong {
+      background: rgba(255, 107, 107, 0.1);
+    }
+
+    .result-row .r-num {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .result-row .r-ans {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .result-row .their {
+      font-family: 'Fredoka One', cursive;
+    }
+
+    .result-row.correct .their {
+      color: var(--accent3);
+    }
+
+    .result-row.wrong .their {
+      color: var(--accent1);
+    }
+
+    .result-row .real {
+      font-family: 'Fredoka One', cursive;
+      color: var(--accent3);
+    }
+
+    .result-row .r-time {
+      font-family: 'Fredoka One', cursive;
+      color: var(--accent4);
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ═══ MENU ═══ -->
+  <div id="screen-menu" class="screen active">
+    <h1>🧠 Math Brain</h1>
+    <p class="subtitle">Train your mental arithmetic!</p>
+
+    <div class="mode-grid">
+      <button class="mode-btn multiply" onclick="selectMode('multiply')">
+        <span class="icon">✖️➗</span>
+        <div class="name">Multiply & Divide</div>
+        <div class="desc">Classic × and ÷ problems</div>
+      </button>
+      <button class="mode-btn plusminus" onclick="selectMode('plusminus')">
+        <span class="icon">➕➖</span>
+        <div class="name">Plus & Minus</div>
+        <div class="desc">Sequential number chains</div>
+      </button>
+    </div>
+
+    <div class="card" id="options-card" style="display:none;">
+      <div class="section-title">⚙️ Settings</div>
+
+      <label>Number of questions</label>
+      <div class="option-row" id="count-options">
+        <button class="opt-btn" onclick="selectCount(10, this)">10</button>
+        <button class="opt-btn" onclick="selectCount(20, this)">20</button>
+        <button class="opt-btn" onclick="selectCount(30, this)">30</button>
+      </div>
+
+      <div id="delay-options" style="display:none; margin-bottom:10px;">
+        <label>Number display delay: <span id="delay-val">2.0s</span></label>
+        <div class="range-row">
+          <span>0.5s</span>
+          <input type="range" min="5" max="50" value="20" step="1" id="delay-slider" oninput="updateDelay(this.value)">
+          <span>5s</span>
+        </div>
+      </div>
+
+      <button class="big-btn start" id="start-btn" onclick="startTest()" disabled>START!</button>
+    </div>
+  </div>
+
+  <!-- ═══ TEST — MULTIPLY ═══ -->
+  <div id="screen-test-multiply" class="screen">
+    <h1>✖️➗</h1>
+    <div class="progress-bar-wrap" style="width:100%;max-width:600px;">
+      <div class="progress-bar" id="pb-multiply"></div>
+    </div>
+    <div class="question-counter" id="qc-multiply"></div>
+    <div class="live-timer" id="timer-multiply">0.0s</div>
+    <div class="card" style="max-width:500px;">
+      <div class="question-display" id="multiply-question"></div>
+      <p class="hint">Remember the answer in your head!</p>
+      <div style="text-align:center;">
+        <span class="space-prompt">
+          <span class="space-key" id="space-key-mul">SPACE</span>
+          <span id="mul-space-label">next question</span>
+        </span>
+      </div>
+    </div>
+    <button class="big-btn back" onclick="goMenu()" style="max-width:500px;margin-top:14px;">← Back to menu</button>
+  </div>
+
+  <!-- ═══ TEST — PLUS/MINUS ═══ -->
+  <div id="screen-test-plusminus" class="screen">
+    <h1>➕➖</h1>
+    <div class="progress-bar-wrap" style="width:100%;max-width:600px;">
+      <div class="progress-bar" id="pb-plusminus"></div>
+    </div>
+    <div class="question-counter" id="qc-plusminus"></div>
+    <div class="live-timer" id="timer-plusminus">0.0s</div>
+    <div class="card" style="max-width:500px;">
+      <div class="seq-display">
+        <div class="seq-number" id="seq-number-display"></div>
+      </div>
+      <div class="seq-playing-label" id="seq-playing-label">▶ playing…</div>
+      <p class="hint">Numbers appear one by one — keep a running total!</p>
+      <div style="text-align:center;">
+        <span class="space-prompt">
+          <span class="space-key" id="space-key-seq">SPACE</span>
+          <span id="seq-space-label">start</span>
+        </span>
+      </div>
+    </div>
+    <button class="big-btn back" onclick="goMenu()" style="max-width:500px;margin-top:14px;">← Back to menu</button>
+  </div>
+
+  <!-- ═══ ANSWERS ═══ -->
+  <div id="screen-answers" class="screen">
+    <h1>📝 Your Answers</h1>
+    <p class="subtitle">Fill in what you remember!</p>
+    <div class="card" style="max-width:600px;">
+      <div class="answers-grid" id="answers-grid"></div>
+      <button class="big-btn submit" onclick="checkAnswers()">Check Answers ✓</button>
+    </div>
+  </div>
+
+  <!-- ═══ RESULTS ═══ -->
+  <div id="screen-results" class="screen">
+    <h1>🎉 Results</h1>
+    <div class="card" style="max-width:620px;">
+      <div class="score-circle" id="score-circle">
+        <div class="score-num" id="score-num"></div>
+        <div class="score-label" id="score-label"></div>
+      </div>
+      <div class="result-msg" id="result-msg"></div>
+
+      <div class="time-summary">
+        <div class="time-pill">
+          <span class="pill-label">Total Time</span>
+          <span id="res-total-time">—</span>
+        </div>
+        <div class="time-pill">
+          <span class="pill-label">Avg / Question</span>
+          <span id="res-avg-time">—</span>
+        </div>
+        <div class="time-pill">
+          <span class="pill-label">Fastest</span>
+          <span id="res-fastest">—</span>
+        </div>
+        <div class="time-pill">
+          <span class="pill-label">Slowest</span>
+          <span id="res-slowest">—</span>
+        </div>
+      </div>
+
+      <div class="sep"></div>
+      <div class="results-list" id="results-list"></div>
+      <button class="big-btn submit" onclick="goMenu()" style="margin-top:20px;">Play Again 🔄</button>
+    </div>
+  </div>
+
+  <script>
+    // ── State ─────────────────────────────────────
+    let mode = null;
+    let questionCount = null;
+    let delayMs = 2000;
+    let questions = [];
+    let currentQ = 0;
+    let testActive = false;
+
+    // Timing
+    let questionTimes = [];
+    let qStartTime = null;
+    let liveTimerRAF = null;
+    let liveTimerActive = false;
+    let liveTimerId = null;
+
+    // Plus/minus sequence state
+    let seqRunning = false;
+    let seqDone = false;
+    let seqStep = 0;
+    let seqQueue = [];
+    let seqTimeout = null;
+
+    // ── Menu ──────────────────────────────────────
+    function selectMode(m) {
+      mode = m;
+      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('selected'));
+      document.querySelector('.mode-btn.' + m).classList.add('selected');
+      document.getElementById('options-card').style.display = 'block';
+      document.getElementById('delay-options').style.display = m === 'plusminus' ? 'block' : 'none';
+      checkStartReady();
+    }
+
+    function selectCount(n, btn) {
+      questionCount = n;
+      document.querySelectorAll('#count-options .opt-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      checkStartReady();
+    }
+
+    function updateDelay(val) {
+      delayMs = val * 100;
+      document.getElementById('delay-val').textContent = (delayMs / 1000).toFixed(1) + 's';
+    }
+
+    function checkStartReady() {
+      document.getElementById('start-btn').disabled = !(mode && questionCount);
+    }
+
+    // ── Space Key ─────────────────────────────────
+    document.addEventListener('keydown', (e) => {
+      if (e.code !== 'Space') return;
+      const active = document.querySelector('.screen.active');
+      if (!active || !testActive) return;
+      e.preventDefault();
+
+      if (active.id === 'screen-test-multiply') {
+        pulseKey('space-key-mul');
+        handleMultiplySpace();
+      } else if (active.id === 'screen-test-plusminus') {
+        pulseKey('space-key-seq');
+        handleSeqSpace();
+      }
+    });
+
+    function pulseKey(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.remove('pulse');
+      void el.offsetWidth;
+      el.classList.add('pulse');
+      setTimeout(() => el.classList.remove('pulse'), 200);
+    }
+
+    // ── Question Generators ───────────────────────
+    function genMultiply() {
+      if (Math.random() < 0.5) {
+        const a = Math.floor(Math.random() * 50) + 2;
+        const b = Math.floor(Math.random() * 9) + 2;
+        return { display: `${a} × ${b}`, answer: a * b };
+      } else {
+        const b = Math.floor(Math.random() * 9) + 2;
+        const ans = Math.floor(Math.random() * 50) + 2;
+        return { display: `${b * ans} ÷ ${b}`, answer: ans };
+      }
+    }
+
+    function genPlusMinus() {
+      let nums = [];
+      let first = Math.floor(Math.random() * 200) + 10;
+      let running = first;
+      nums.push({ value: first, op: null });
+      for (let i = 1; i < 4; i++) {
+        const op = Math.random() < 0.5 ? '+' : '-';
+        let n = Math.floor(Math.random() * 50) + 1;
+        if (op === '-' && running - n < 0) n = Math.floor(running * 0.4);
+        running = op === '+' ? running + n : running - n;
+        nums.push({ value: n, op });
+      }
+      const display = nums.map((n, i) => i === 0 ? String(n.value) : (n.op + n.value)).join(' ');
+      return { nums, answer: running, display };
+    }
+
+    // ── Start Test ────────────────────────────────
+    function startTest() {
+      questions = [];
+      questionTimes = new Array(questionCount).fill(0);
+      for (let i = 0; i < questionCount; i++) {
+        questions.push(mode === 'multiply' ? genMultiply() : genPlusMinus());
+      }
+      currentQ = 0;
+      testActive = true;
+
+      if (mode === 'multiply') {
+        showScreen('screen-test-multiply');
+        renderMultiplyQuestion();
+        beginTimer('timer-multiply');
+      } else {
+        showScreen('screen-test-plusminus');
+        prepareSeqQuestion();
+      }
+    }
+
+    // ── Live Timer ────────────────────────────────
+    function beginTimer(timerId) {
+      liveTimerId = timerId;
+      qStartTime = performance.now();
+      liveTimerActive = true;
+      cancelAnimationFrame(liveTimerRAF);
+      function tick() {
+        if (!liveTimerActive) return;
+        const el = document.getElementById(liveTimerId);
+        if (el) el.textContent = ((performance.now() - qStartTime) / 1000).toFixed(1) + 's';
+        liveTimerRAF = requestAnimationFrame(tick);
+      }
+      tick();
+    }
+
+    function stopTimer() {
+      liveTimerActive = false;
+      cancelAnimationFrame(liveTimerRAF);
+      questionTimes[currentQ] = Math.round(performance.now() - qStartTime);
+    }
+
+    // ── Multiply Mode ─────────────────────────────
+    // SPACE: records time for current Q, immediately shows next Q (or ends test).
+    // Timer starts fresh with each question.
+
+    function renderMultiplyQuestion() {
+      const q = questions[currentQ];
+      const total = questions.length;
+      document.getElementById('pb-multiply').style.width = ((currentQ / total) * 100) + '%';
+      document.getElementById('qc-multiply').textContent = `Question ${currentQ + 1} of ${total}`;
+      const parts = q.display.split(' ');
+      document.getElementById('multiply-question').innerHTML =
+        `${parts[0]} <span class="op">${parts[1]}</span> ${parts[2]}`;
+      document.getElementById('timer-multiply').textContent = '0.0s';
+      const isLast = currentQ === questions.length - 1;
+      document.getElementById('mul-space-label').textContent = isLast ? 'finish test' : 'next question';
+    }
+
+    function handleMultiplySpace() {
+      stopTimer();
+      currentQ++;
+      if (currentQ >= questions.length) {
+        showAnswerScreen();
+        return;
+      }
+      renderMultiplyQuestion();
+      beginTimer('timer-multiply');
+    }
+
+    // ── Plus/Minus Mode ───────────────────────────
+    // SPACE (when waiting): starts auto-sequence. Timer begins at this moment.
+    // SPACE (during sequence): ignored.
+    // SPACE (after sequence done): records time, immediately sets up next question.
+
+    function prepareSeqQuestion() {
+      seqRunning = false;
+      seqDone = false;
+      seqQueue = questions[currentQ].nums;
+      seqStep = 0;
+
+      const total = questions.length;
+      document.getElementById('pb-plusminus').style.width = ((currentQ / total) * 100) + '%';
+      document.getElementById('qc-plusminus').textContent = `Question ${currentQ + 1} of ${total}`;
+      document.getElementById('timer-plusminus').textContent = '0.0s';
+
+      const el = document.getElementById('seq-number-display');
+      el.className = 'seq-number';
+      el.textContent = '';
+      document.getElementById('seq-playing-label').classList.remove('visible');
+
+      const isLast = currentQ === questions.length - 1;
+      document.getElementById('seq-space-label').textContent = currentQ === 0 ? 'start' : (isLast ? 'last question' : 'next question');
+    }
+
+    function handleSeqSpace() {
+      if (seqRunning) return; // blocked during playback
+
+      if (seqDone) {
+        // Finish this question, move immediately to next (or end)
+        stopTimer();
+        seqDone = false;
+        currentQ++;
+        if (currentQ >= questions.length) {
+          showAnswerScreen();
+          return;
+        }
+        prepareSeqQuestion();
+      }
+
+      // Start the sequence — timer begins now
+      beginTimer('timer-plusminus');
+      seqRunning = true;
+      document.getElementById('seq-space-label').textContent = 'playing…';
+      document.getElementById('seq-playing-label').classList.add('visible');
+      runSeqStep();
+    }
+
+    function runSeqStep() {
+      const el = document.getElementById('seq-number-display');
+      el.classList.remove('show');
+
+      // Mark done IMMEDIATELY when last number has been shown, so the very next
+      // Space press isn't swallowed by the seqRunning guard during the fade-out delay.
+      if (seqStep >= seqQueue.length) {
+        seqRunning = false;
+        seqDone = true;
+        document.getElementById('seq-playing-label').classList.remove('visible');
+        const isLast = currentQ === questions.length - 1;
+        document.getElementById('seq-space-label').textContent = isLast ? 'finish test' : 'next question';
+        return;
+      }
+
+      setTimeout(() => {
+        const item = seqQueue[seqStep];
+        el.className = 'seq-number';
+        if (seqStep === 0) el.classList.add('op-first');
+        else if (item.op === '+') el.classList.add('op-plus');
+        else el.classList.add('op-minus');
+        el.textContent = seqStep === 0 ? item.value : (item.op + item.value);
+        el.classList.add('show');
+        seqStep++;
+        seqTimeout = setTimeout(runSeqStep, delayMs);
+      }, 220);
+    }
+
+    // ── Answers Screen ────────────────────────────
+    function showAnswerScreen() {
+      testActive = false;
+      clearTimeout(seqTimeout);
+      liveTimerActive = false;
+      cancelAnimationFrame(liveTimerRAF);
+
+      showScreen('screen-answers');
+      const grid = document.getElementById('answers-grid');
+      grid.innerHTML = '';
+      for (let i = 0; i < questions.length; i++) {
+        const div = document.createElement('div');
+        div.className = 'answer-item';
+        div.innerHTML = `<span class="qlabel">Q${i + 1}:</span><input type="number" id="ans-${i}" placeholder="?">`;
+        grid.appendChild(div);
+      }
+      setTimeout(() => document.getElementById('ans-0')?.focus(), 300);
+    }
+
+    // ── Check + Results ───────────────────────────
+    function checkAnswers() {
+      let correct = 0;
+      const results = [];
+      for (let i = 0; i < questions.length; i++) {
+        const inp = document.getElementById('ans-' + i);
+        const given = inp ? parseInt(inp.value, 10) : NaN;
+        const isCorrect = given === questions[i].answer;
+        if (isCorrect) correct++;
+        results.push({ q: questions[i], given, isCorrect, time: questionTimes[i] });
+      }
+
+      showScreen('screen-results');
+
+      // Score
+      const pct = Math.round((correct / questions.length) * 100);
+      const circle = document.getElementById('score-circle');
+      circle.className = 'score-circle ' + (pct >= 80 ? 'score-great' : pct >= 50 ? 'score-ok' : 'score-bad');
+      document.getElementById('score-num').textContent = `${correct}/${questions.length}`;
+      document.getElementById('score-label').textContent = pct + '%';
+
+      const msgs = pct >= 90 ? ['🌟 Incredible!', '🚀 Math Wizard!', '👑 Outstanding!']
+        : pct >= 70 ? ['💪 Great job!', '🔥 Well done!', '😎 Awesome!']
+          : pct >= 50 ? ['👍 Good effort!', '🌱 Keep going!', '💡 Getting there!']
+            : ['🤗 Keep practicing!', '📚 Try again!', '💪 You can do it!'];
+      document.getElementById('result-msg').textContent = msgs[Math.floor(Math.random() * msgs.length)];
+
+      // Time stats
+      const times = questionTimes.filter(t => t > 0);
+      const total = times.reduce((a, b) => a + b, 0);
+      const avg = times.length ? total / times.length : 0;
+      const fast = times.length ? Math.min(...times) : 0;
+      const slow = times.length ? Math.max(...times) : 0;
+
+      document.getElementById('res-total-time').textContent = fmtTime(total);
+      document.getElementById('res-avg-time').textContent = fmtTime(avg);
+      document.getElementById('res-fastest').textContent = fmtTime(fast);
+      document.getElementById('res-slowest').textContent = fmtTime(slow);
+
+      // Per-question list
+      const list = document.getElementById('results-list');
+      list.innerHTML = '';
+      results.forEach((r, i) => {
+        const row = document.createElement('div');
+        row.className = 'result-row ' + (r.isCorrect ? 'correct' : 'wrong');
+        const ansHtml = r.isCorrect
+          ? `<span class="their">✓ ${r.given}</span>`
+          : `<span class="their">${isNaN(r.given) ? '—' : r.given}</span>
+         <span style="color:var(--muted);font-size:0.75rem">→</span>
+         <span class="real">${r.q.answer}</span>`;
+        row.innerHTML = `
+      <span class="r-num">Q${i + 1}</span>
+      <span class="r-ans">${ansHtml}</span>
+      <span class="r-time">⏱ ${fmtTime(r.time)}</span>
+    `;
+        list.appendChild(row);
+      });
+    }
+
+    function fmtTime(ms) {
+      if (!ms) return '—';
+      const s = ms / 1000;
+      if (s < 60) return s.toFixed(1) + 's';
+      return Math.floor(s / 60) + 'm ' + (s % 60).toFixed(0) + 's';
+    }
+
+    // ── Utils ─────────────────────────────────────
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function goMenu() {
+      testActive = false;
+      liveTimerActive = false;
+      cancelAnimationFrame(liveTimerRAF);
+      clearTimeout(seqTimeout);
+      seqRunning = false;
+      seqDone = false;
+      mode = null;
+      questionCount = null;
+      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('selected'));
+      document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+      document.getElementById('options-card').style.display = 'none';
+      document.getElementById('start-btn').disabled = true;
+      showScreen('screen-menu');
+    }
+  </script>
+</body>
+
+</html>
