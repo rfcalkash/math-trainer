@@ -1,1125 +1,1682 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Math Brain 🧠</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #0f0e17;
-    --card: #1a1830;
-    --accent1: #ff6b6b;
-    --accent2: #ffd93d;
-    --accent3: #6bcb77;
-    --accent4: #4d96ff;
-    --text: #fffffe;
-    --muted: #a7a9be;
-    --radius: 20px;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math Brain 🧠</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f0e17;
+      --card: #1a1830;
+      --accent1: #ff6b6b;
+      --accent2: #ffd93d;
+      --accent3: #6bcb77;
+      --accent4: #4d96ff;
+      --text: #fffffe;
+      --muted: #a7a9be;
+      --radius: 20px;
+    }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  body {
-    font-family: 'Nunito', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    overflow-x: hidden;
-  }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
 
-  body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background: radial-gradient(ellipse at 20% 20%, rgba(77,150,255,0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(255,107,107,0.08) 0%, transparent 50%);
-    pointer-events: none;
-  }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at 20% 20%, rgba(77, 150, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(255, 107, 107, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
 
-  h1 {
-    font-family: 'Fredoka One', cursive;
-    font-size: clamp(2.5rem, 6vw, 4rem);
-    background: linear-gradient(135deg, var(--accent2), var(--accent1));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    text-align: center; margin-bottom: 8px;
-  }
+    h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      background: linear-gradient(135deg, var(--accent2), var(--accent1));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-align: center;
+      margin-bottom: 8px;
+    }
 
-  .subtitle { color: var(--muted); text-align: center; font-size: 1rem; margin-bottom: 40px; font-weight: 600; }
+    .subtitle {
+      color: var(--muted);
+      text-align: center;
+      font-size: 1rem;
+      margin-bottom: 40px;
+      font-weight: 600;
+    }
 
-  .screen { display: none; width: 100%; max-width: 700px; animation: fadeIn 0.4s ease; }
-  .screen.active { display: flex; flex-direction: column; align-items: center; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .screen {
+      display: none;
+      width: 100%;
+      max-width: 700px;
+      animation: fadeIn 0.4s ease;
+    }
 
-  .card { background: var(--card); border-radius: var(--radius); padding: 30px; width: 100%; border: 1px solid rgba(255,255,255,0.06); }
-  .section-title { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: var(--accent2); margin-bottom: 16px; }
+    .screen.active {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-  /* Mode grid — 3 columns now */
-  .mode-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 30px; width: 100%; }
-  @media (max-width: 520px) { .mode-grid { grid-template-columns: 1fr; } }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
 
-  .mode-btn {
-    background: var(--card); border: 2px solid rgba(255,255,255,0.1);
-    border-radius: var(--radius); padding: 20px 14px; cursor: pointer;
-    transition: all 0.2s; text-align: center; color: var(--text);
-    font-family: 'Nunito', sans-serif; font-size: 1rem; font-weight: 700;
-  }
-  .mode-btn .icon { font-size: 2rem; display: block; margin-bottom: 8px; }
-  .mode-btn .name { font-family: 'Fredoka One', cursive; font-size: 1.1rem; margin-bottom: 4px; }
-  .mode-btn .desc { font-size: 0.75rem; color: var(--muted); }
-  .mode-btn:hover { border-color: var(--accent4); background: rgba(77,150,255,0.12); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(77,150,255,0.2); }
-  .mode-btn.multiply.selected  { border-color: var(--accent1); background: rgba(255,107,107,0.12); box-shadow: 0 8px 24px rgba(255,107,107,0.2); }
-  .mode-btn.plusminus.selected { border-color: var(--accent3); background: rgba(107,203,119,0.12); box-shadow: 0 8px 24px rgba(107,203,119,0.2); }
-  .mode-btn.timelimit.selected { border-color: var(--accent2); background: rgba(255,217,61,0.12);  box-shadow: 0 8px 24px rgba(255,217,61,0.2); }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-  .option-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 30px;
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
 
-  .opt-btn {
-    flex: 1; min-width: 70px; padding: 11px 12px; border-radius: 12px;
-    border: 2px solid rgba(255,255,255,0.1); background: transparent;
-    color: var(--text); font-family: 'Nunito', sans-serif; font-weight: 700;
-    font-size: 0.95rem; cursor: pointer; transition: all 0.2s; text-align: center;
-  }
-  .opt-btn:hover, .opt-btn.selected { border-color: var(--accent2); background: rgba(255,217,61,0.12); color: var(--accent2); }
+    .section-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.4rem;
+      color: var(--accent2);
+      margin-bottom: 16px;
+    }
 
-  /* Custom count input */
-  .custom-count-wrap { display: none; flex: 1; min-width: 90px; }
-  .custom-count-wrap.visible { display: flex; }
-  .custom-count-wrap input {
-    width: 100%; padding: 11px 12px; border-radius: 12px;
-    border: 2px solid rgba(255,255,255,0.1); background: transparent;
-    color: var(--text); font-family: 'Fredoka One', cursive; font-size: 1.1rem;
-    text-align: center; outline: none; transition: border-color 0.2s;
-  }
-  .custom-count-wrap input:focus { border-color: var(--accent2); }
-  .custom-count-wrap input.selected-custom { border-color: var(--accent2); background: rgba(255,217,61,0.12); color: var(--accent2); }
+    /* Mode grid — 3 columns now */
+    .mode-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 30px;
+      width: 100%;
+    }
 
-  label { font-weight: 700; color: var(--muted); font-size: 0.9rem; display: block; margin-bottom: 8px; }
-  input[type="range"] { width: 100%; accent-color: var(--accent4); height: 6px; border-radius: 3px; }
-  .range-row { display: flex; align-items: center; gap: 14px; }
+    @media (max-width: 520px) {
+      .mode-grid {
+        grid-template-columns: 1fr;
+      }
+    }
 
-  /* Time limit input */
-  .time-limit-wrap { margin-bottom: 16px; }
-  .time-limit-row { display: flex; gap: 10px; flex-wrap: wrap; }
-  .time-btn {
-    flex: 1; min-width: 60px; padding: 11px 10px; border-radius: 12px;
-    border: 2px solid rgba(255,255,255,0.1); background: transparent;
-    color: var(--text); font-family: 'Fredoka One', cursive; font-size: 1rem;
-    cursor: pointer; transition: all 0.2s; text-align: center;
-  }
-  .time-btn:hover, .time-btn.selected { border-color: var(--accent2); background: rgba(255,217,61,0.12); color: var(--accent2); }
-  .custom-time-wrap { display: none; flex: 1; min-width: 90px; }
-  .custom-time-wrap.visible { display: flex; }
-  .custom-time-wrap input {
-    width: 100%; padding: 11px 12px; border-radius: 12px;
-    border: 2px solid rgba(255,255,255,0.1); background: transparent;
-    color: var(--text); font-family: 'Fredoka One', cursive; font-size: 1.1rem;
-    text-align: center; outline: none; transition: border-color 0.2s;
-  }
-  .custom-time-wrap input:focus { border-color: var(--accent2); }
-  .custom-time-wrap input.selected-custom { border-color: var(--accent2); background: rgba(255,217,61,0.12); color: var(--accent2); }
+    .mode-btn {
+      background: var(--card);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius);
+      padding: 20px 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+      color: var(--text);
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+    }
 
-  .big-btn {
-    display: block; width: 100%; padding: 18px; border-radius: var(--radius);
-    border: none; font-family: 'Fredoka One', cursive; font-size: 1.5rem;
-    cursor: pointer; transition: all 0.2s; margin-top: 10px; letter-spacing: 1px;
-  }
-  .big-btn.start { background: linear-gradient(135deg, var(--accent1), var(--accent2)); color: #1a1830; }
-  .big-btn.start:hover { transform: scale(1.02); box-shadow: 0 12px 32px rgba(255,107,107,0.4); }
-  .big-btn.start:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-  .big-btn.submit { background: linear-gradient(135deg, var(--accent3), var(--accent4)); color: #1a1830; margin-top: 20px; }
-  .big-btn.submit:hover { transform: scale(1.02); box-shadow: 0 12px 32px rgba(107,203,119,0.3); }
-  .big-btn.back { background: rgba(255,255,255,0.06); color: var(--muted); font-size: 1rem; padding: 12px; margin-top: 14px; }
+    .mode-btn .icon {
+      font-size: 2rem;
+      display: block;
+      margin-bottom: 8px;
+    }
 
-  /* ── Test Screens ── */
-  .progress-bar-wrap { width: 100%; height: 8px; background: rgba(255,255,255,0.08); border-radius: 4px; margin-bottom: 24px; overflow: hidden; }
-  .progress-bar { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--accent4), var(--accent3)); transition: width 0.3s ease; }
+    .mode-btn .name {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+    }
 
-  .top-row { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 600px; margin-bottom: 16px; }
-  .question-counter { font-weight: 700; color: var(--muted); font-size: 0.9rem; }
+    .mode-btn .desc {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
 
-  /* Per-question timer (yellow) */
-  .live-timer {
-    font-family: 'Fredoka One', cursive; font-size: 1rem;
-    color: var(--accent2); background: rgba(255,217,61,0.1);
-    border: 1px solid rgba(255,217,61,0.2); border-radius: 20px;
-    padding: 4px 14px; min-width: 70px; text-align: center;
-  }
+    .mode-btn:hover {
+      border-color: var(--accent4);
+      background: rgba(77, 150, 255, 0.12);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(77, 150, 255, 0.2);
+    }
 
-  /* Countdown timer for time-limit mode (red when low) */
-  .countdown-timer {
-    font-family: 'Fredoka One', cursive; font-size: 1.3rem;
-    color: var(--accent3); background: rgba(107,203,119,0.1);
-    border: 1px solid rgba(107,203,119,0.25); border-radius: 20px;
-    padding: 6px 18px; text-align: center; transition: color 0.3s, background 0.3s, border-color 0.3s;
-  }
-  .countdown-timer.urgent { color: var(--accent1); background: rgba(255,107,107,0.12); border-color: rgba(255,107,107,0.3); animation: urgentPulse 0.8s ease infinite; }
-  @keyframes urgentPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+    .mode-btn.multiply.selected {
+      border-color: var(--accent1);
+      background: rgba(255, 107, 107, 0.12);
+      box-shadow: 0 8px 24px rgba(255, 107, 107, 0.2);
+    }
 
-  .question-display {
-    font-family: 'Fredoka One', cursive; font-size: clamp(3rem, 10vw, 6rem);
-    text-align: center; color: var(--text); padding: 36px 20px; line-height: 1.1;
-  }
-  .question-display span.op { color: var(--accent1); }
+    .mode-btn.plusminus.selected {
+      border-color: var(--accent3);
+      background: rgba(107, 203, 119, 0.12);
+      box-shadow: 0 8px 24px rgba(107, 203, 119, 0.2);
+    }
 
-  /* "waiting to start" overlay on multiply card */
-  .waiting-overlay {
-    display: flex; flex-direction: column; align-items: center;
-    justify-content: center; min-height: 180px; gap: 12px;
-  }
-  .waiting-text { font-family: 'Fredoka One', cursive; font-size: 1.6rem; color: var(--muted); }
+    .mode-btn.timelimit.selected {
+      border-color: var(--accent2);
+      background: rgba(255, 217, 61, 0.12);
+      box-shadow: 0 8px 24px rgba(255, 217, 61, 0.2);
+    }
 
-  .seq-display { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 220px; }
-  .seq-number {
-    font-family: 'Fredoka One', cursive; font-size: clamp(3.5rem, 12vw, 7rem);
-    text-align: center; opacity: 0; transform: scale(0.7);
-    transition: opacity 0.25s, transform 0.25s;
-  }
-  .seq-number.show { opacity: 1; transform: scale(1); }
-  .seq-number.op-first { color: var(--text); }
-  .seq-number.op-plus  { color: var(--accent3); }
-  .seq-number.op-minus { color: var(--accent1); }
+    .option-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
 
-  .hint { color: var(--muted); font-size: 0.85rem; margin-top: 16px; text-align: center; }
+    .opt-btn {
+      flex: 1;
+      min-width: 70px;
+      padding: 11px 12px;
+      border-radius: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      background: transparent;
+      color: var(--text);
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
 
-  /* Space/Tap prompt */
-  .action-prompt { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 22px; flex-wrap: wrap; }
+    .opt-btn:hover,
+    .opt-btn.selected {
+      border-color: var(--accent2);
+      background: rgba(255, 217, 61, 0.12);
+      color: var(--accent2);
+    }
 
-  .space-key {
-    display: inline-block; background: rgba(255,255,255,0.08);
-    border: 2px solid rgba(255,255,255,0.15); border-bottom-width: 4px;
-    border-radius: 8px; padding: 5px 18px;
-    font-family: 'Fredoka One', cursive; font-size: 0.85rem; color: var(--text); letter-spacing: 2px;
-  }
-  .space-key.pulse { animation: keyPulse 0.15s ease; }
-  @keyframes keyPulse {
-    0%   { transform: scale(1); border-bottom-width: 4px; }
-    50%  { transform: scale(0.95) translateY(2px); border-bottom-width: 2px; background: rgba(77,150,255,0.2); }
-    100% { transform: scale(1); border-bottom-width: 4px; }
-  }
+    /* Custom count input */
+    .custom-count-wrap {
+      display: none;
+      flex: 1;
+      min-width: 90px;
+    }
 
-  /* Tap button — only visible on touch devices */
-  .tap-btn {
-    display: none; /* shown via JS if touch device */
-    padding: 10px 24px; border-radius: 30px;
-    background: linear-gradient(135deg, var(--accent4), var(--accent3));
-    border: none; color: #0f0e17; font-family: 'Fredoka One', cursive;
-    font-size: 1rem; cursor: pointer; transition: transform 0.1s, box-shadow 0.2s;
-    box-shadow: 0 4px 16px rgba(77,150,255,0.3); letter-spacing: 0.5px;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
-  }
-  .tap-btn:active { transform: scale(0.94); box-shadow: 0 2px 8px rgba(77,150,255,0.2); }
-  body.is-touch .tap-btn { display: inline-block; }
-  .prompt-or { color: var(--muted); font-size: 0.85rem; font-weight: 700; }
-  body.is-touch .space-key-wrap { display: none; }
+    .custom-count-wrap.visible {
+      display: flex;
+    }
 
-  .action-label { color: var(--muted); font-size: 0.9rem; font-weight: 700; }
+    .custom-count-wrap input {
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      background: transparent;
+      color: var(--text);
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem;
+      text-align: center;
+      outline: none;
+      transition: border-color 0.2s;
+    }
 
-  .seq-playing-label { font-size: 0.8rem; color: var(--accent4); font-weight: 700; opacity: 0; transition: opacity 0.3s; margin-top: 8px; text-align: center; }
-  .seq-playing-label.visible { opacity: 1; }
+    .custom-count-wrap input:focus {
+      border-color: var(--accent2);
+    }
 
-  /* ── Answers Screen ── */
-  .answers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; width: 100%; margin-bottom: 10px; }
-  .answer-item { background: rgba(255,255,255,0.04); border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; }
-  .answer-item .qlabel { font-family: 'Fredoka One', cursive; font-size: 1rem; color: var(--muted); white-space: nowrap; }
-  .answer-item input {
-    flex: 1; min-width: 0; background: transparent; border: none;
-    border-bottom: 2px solid rgba(255,255,255,0.15); color: var(--text);
-    font-family: 'Fredoka One', cursive; font-size: 1.2rem; padding: 4px 0;
-    outline: none; text-align: right; transition: border-color 0.2s;
-  }
-  .answer-item input:focus { border-color: var(--accent4); }
+    .custom-count-wrap input.selected-custom {
+      border-color: var(--accent2);
+      background: rgba(255, 217, 61, 0.12);
+      color: var(--accent2);
+    }
 
-  /* ── Results Screen ── */
-  .score-circle {
-    width: 140px; height: 140px; border-radius: 50%;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    margin: 0 auto 24px; font-family: 'Fredoka One', cursive;
-  }
-  .score-circle .score-num  { font-size: 2.5rem; line-height: 1; }
-  .score-circle .score-label { font-size: 0.85rem; opacity: 0.8; }
-  .score-great { background: radial-gradient(circle, rgba(107,203,119,0.2), rgba(107,203,119,0.05)); border: 3px solid var(--accent3); color: var(--accent3); }
-  .score-ok    { background: radial-gradient(circle, rgba(255,217,61,0.2),  rgba(255,217,61,0.05));  border: 3px solid var(--accent2); color: var(--accent2); }
-  .score-bad   { background: radial-gradient(circle, rgba(255,107,107,0.2), rgba(255,107,107,0.05)); border: 3px solid var(--accent1); color: var(--accent1); }
+    label {
+      font-weight: 700;
+      color: var(--muted);
+      font-size: 0.9rem;
+      display: block;
+      margin-bottom: 8px;
+    }
 
-  .result-msg { font-family: 'Fredoka One', cursive; font-size: 1.6rem; text-align: center; margin-bottom: 20px; }
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent4);
+      height: 6px;
+      border-radius: 3px;
+    }
 
-  .time-summary { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
-  .time-pill {
-    background: rgba(77,150,255,0.1); border: 1px solid rgba(77,150,255,0.22);
-    border-radius: 30px; padding: 8px 18px; font-family: 'Fredoka One', cursive;
-    font-size: 1rem; color: var(--accent4);
-    display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 100px;
-  }
-  .time-pill .pill-label { font-family: 'Nunito', sans-serif; font-size: 0.65rem; font-weight: 800; color: var(--muted); letter-spacing: 0.5px; text-transform: uppercase; }
+    .range-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
 
-  .sep { width: 100%; height: 1px; background: rgba(255,255,255,0.06); margin: 20px 0; }
+    /* Time limit input */
+    .time-limit-wrap {
+      margin-bottom: 16px;
+    }
 
-  .results-list { width: 100%; display: flex; flex-direction: column; gap: 8px; max-height: 380px; overflow-y: auto; padding-right: 4px; }
-  .result-row { display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 10px; font-size: 0.9rem; font-weight: 700; }
-  .result-row.correct { background: rgba(107,203,119,0.1); }
-  .result-row.wrong   { background: rgba(255,107,107,0.1); }
-  .result-row .r-num  { color: var(--muted); font-size: 0.8rem; }
-  .result-row .r-ans  { display: flex; align-items: center; gap: 6px; }
-  .result-row .their  { font-family: 'Fredoka One', cursive; }
-  .result-row.correct .their { color: var(--accent3); }
-  .result-row.wrong   .their { color: var(--accent1); }
-  .result-row .real   { font-family: 'Fredoka One', cursive; color: var(--accent3); }
-  .result-row .r-time { font-family: 'Fredoka One', cursive; color: var(--accent4); font-size: 0.85rem; white-space: nowrap; }
-</style>
+    .time-limit-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .time-btn {
+      flex: 1;
+      min-width: 60px;
+      padding: 11px 10px;
+      border-radius: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      background: transparent;
+      color: var(--text);
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .time-btn:hover,
+    .time-btn.selected {
+      border-color: var(--accent2);
+      background: rgba(255, 217, 61, 0.12);
+      color: var(--accent2);
+    }
+
+    .custom-time-wrap {
+      display: none;
+      flex: 1;
+      min-width: 90px;
+    }
+
+    .custom-time-wrap.visible {
+      display: flex;
+    }
+
+    .custom-time-wrap input {
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      background: transparent;
+      color: var(--text);
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem;
+      text-align: center;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .custom-time-wrap input:focus {
+      border-color: var(--accent2);
+    }
+
+    .custom-time-wrap input.selected-custom {
+      border-color: var(--accent2);
+      background: rgba(255, 217, 61, 0.12);
+      color: var(--accent2);
+    }
+
+    .big-btn {
+      display: block;
+      width: 100%;
+      padding: 18px;
+      border-radius: var(--radius);
+      border: none;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 10px;
+      letter-spacing: 1px;
+    }
+
+    .big-btn.start {
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      color: #1a1830;
+    }
+
+    .big-btn.start:hover {
+      transform: scale(1.02);
+      box-shadow: 0 12px 32px rgba(255, 107, 107, 0.4);
+    }
+
+    .big-btn.start:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .big-btn.submit {
+      background: linear-gradient(135deg, var(--accent3), var(--accent4));
+      color: #1a1830;
+      margin-top: 20px;
+    }
+
+    .big-btn.submit:hover {
+      transform: scale(1.02);
+      box-shadow: 0 12px 32px rgba(107, 203, 119, 0.3);
+    }
+
+    .big-btn.back {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--muted);
+      font-size: 1rem;
+      padding: 12px;
+      margin-top: 14px;
+    }
+
+    /* ── Test Screens ── */
+    .progress-bar-wrap {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--accent4), var(--accent3));
+      transition: width 0.3s ease;
+    }
+
+    .top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 600px;
+      margin-bottom: 16px;
+    }
+
+    .question-counter {
+      font-weight: 700;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    /* Per-question timer (yellow) */
+    .live-timer {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem;
+      color: var(--accent2);
+      background: rgba(255, 217, 61, 0.1);
+      border: 1px solid rgba(255, 217, 61, 0.2);
+      border-radius: 20px;
+      padding: 4px 14px;
+      min-width: 70px;
+      text-align: center;
+    }
+
+    /* Countdown timer for time-limit mode (red when low) */
+    .countdown-timer {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.3rem;
+      color: var(--accent3);
+      background: rgba(107, 203, 119, 0.1);
+      border: 1px solid rgba(107, 203, 119, 0.25);
+      border-radius: 20px;
+      padding: 6px 18px;
+      text-align: center;
+      transition: color 0.3s, background 0.3s, border-color 0.3s;
+    }
+
+    .countdown-timer.urgent {
+      color: var(--accent1);
+      background: rgba(255, 107, 107, 0.12);
+      border-color: rgba(255, 107, 107, 0.3);
+      animation: urgentPulse 0.8s ease infinite;
+    }
+
+    @keyframes urgentPulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.6;
+      }
+    }
+
+    .question-display {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(3rem, 10vw, 6rem);
+      text-align: center;
+      color: var(--text);
+      padding: 36px 20px;
+      line-height: 1.1;
+    }
+
+    .question-display span.op {
+      color: var(--accent1);
+    }
+
+    /* "waiting to start" overlay on multiply card */
+    .waiting-overlay {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 180px;
+      gap: 12px;
+    }
+
+    .waiting-text {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.6rem;
+      color: var(--muted);
+    }
+
+    .seq-display {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 220px;
+    }
+
+    .seq-number {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(3.5rem, 12vw, 7rem);
+      text-align: center;
+      opacity: 0;
+      transform: scale(0.7);
+      transition: opacity 0.25s, transform 0.25s;
+    }
+
+    .seq-number.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .seq-number.op-first {
+      color: var(--text);
+    }
+
+    .seq-number.op-plus {
+      color: var(--accent3);
+    }
+
+    .seq-number.op-minus {
+      color: var(--accent1);
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    /* Space/Tap prompt */
+    .action-prompt {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 22px;
+      flex-wrap: wrap;
+    }
+
+    .space-key {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.08);
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      border-bottom-width: 4px;
+      border-radius: 8px;
+      padding: 5px 18px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 0.85rem;
+      color: var(--text);
+      letter-spacing: 2px;
+    }
+
+    .space-key.pulse {
+      animation: keyPulse 0.15s ease;
+    }
+
+    @keyframes keyPulse {
+      0% {
+        transform: scale(1);
+        border-bottom-width: 4px;
+      }
+
+      50% {
+        transform: scale(0.95) translateY(2px);
+        border-bottom-width: 2px;
+        background: rgba(77, 150, 255, 0.2);
+      }
+
+      100% {
+        transform: scale(1);
+        border-bottom-width: 4px;
+      }
+    }
+
+    /* Tap button — only visible on touch devices */
+    .tap-btn {
+      display: none;
+      /* shown via JS if touch device */
+      padding: 10px 24px;
+      border-radius: 30px;
+      background: linear-gradient(135deg, var(--accent4), var(--accent3));
+      border: none;
+      color: #0f0e17;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.2s;
+      box-shadow: 0 4px 16px rgba(77, 150, 255, 0.3);
+      letter-spacing: 0.5px;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    .tap-btn:active {
+      transform: scale(0.94);
+      box-shadow: 0 2px 8px rgba(77, 150, 255, 0.2);
+    }
+
+    body.is-touch .tap-btn {
+      display: inline-block;
+    }
+
+    .prompt-or {
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    body.is-touch .space-key-wrap {
+      display: none;
+    }
+
+    .action-label {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .seq-playing-label {
+      font-size: 0.8rem;
+      color: var(--accent4);
+      font-weight: 700;
+      opacity: 0;
+      transition: opacity 0.3s;
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    .seq-playing-label.visible {
+      opacity: 1;
+    }
+
+    /* ── Answers Screen ── */
+    .answers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 12px;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .answer-item {
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .answer-item .qlabel {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .answer-item input {
+      flex: 1;
+      min-width: 0;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+      color: var(--text);
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.2rem;
+      padding: 4px 0;
+      outline: none;
+      text-align: right;
+      transition: border-color 0.2s;
+    }
+
+    .answer-item input:focus {
+      border-color: var(--accent4);
+    }
+
+    /* ── Results Screen ── */
+    .score-circle {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-family: 'Fredoka One', cursive;
+    }
+
+    .score-circle .score-num {
+      font-size: 2.5rem;
+      line-height: 1;
+    }
+
+    .score-circle .score-label {
+      font-size: 0.85rem;
+      opacity: 0.8;
+    }
+
+    .score-great {
+      background: radial-gradient(circle, rgba(107, 203, 119, 0.2), rgba(107, 203, 119, 0.05));
+      border: 3px solid var(--accent3);
+      color: var(--accent3);
+    }
+
+    .score-ok {
+      background: radial-gradient(circle, rgba(255, 217, 61, 0.2), rgba(255, 217, 61, 0.05));
+      border: 3px solid var(--accent2);
+      color: var(--accent2);
+    }
+
+    .score-bad {
+      background: radial-gradient(circle, rgba(255, 107, 107, 0.2), rgba(255, 107, 107, 0.05));
+      border: 3px solid var(--accent1);
+      color: var(--accent1);
+    }
+
+    .result-msg {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.6rem;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .time-summary {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .time-pill {
+      background: rgba(77, 150, 255, 0.1);
+      border: 1px solid rgba(77, 150, 255, 0.22);
+      border-radius: 30px;
+      padding: 8px 18px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem;
+      color: var(--accent4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      min-width: 100px;
+    }
+
+    .time-pill .pill-label {
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .sep {
+      width: 100%;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.06);
+      margin: 20px 0;
+    }
+
+    .results-list {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 380px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .result-row {
+      display: grid;
+      grid-template-columns: 44px 1fr auto;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .result-row.correct {
+      background: rgba(107, 203, 119, 0.1);
+    }
+
+    .result-row.wrong {
+      background: rgba(255, 107, 107, 0.1);
+    }
+
+    .result-row .r-num {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .result-row .r-ans {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .result-row .their {
+      font-family: 'Fredoka One', cursive;
+    }
+
+    .result-row.correct .their {
+      color: var(--accent3);
+    }
+
+    .result-row.wrong .their {
+      color: var(--accent1);
+    }
+
+    .result-row .real {
+      font-family: 'Fredoka One', cursive;
+      color: var(--accent3);
+    }
+
+    .result-row .r-time {
+      font-family: 'Fredoka One', cursive;
+      color: var(--accent4);
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- ═══════════════ MENU ═══════════════ -->
-<div id="screen-menu" class="screen active">
-  <h1>🧠 Math Brain</h1>
-  <p class="subtitle">Train your mental arithmetic!</p>
+  <!-- ═══════════════ MENU ═══════════════ -->
+  <div id="screen-menu" class="screen active">
+    <h1>🧠 Math Brain</h1>
+    <p class="subtitle">Train your mental arithmetic!</p>
 
-  <div class="mode-grid">
-    <button class="mode-btn multiply" onclick="selectMode('multiply')">
-      <span class="icon">✖️➗</span>
-      <div class="name">Multiply & Divide</div>
-      <div class="desc">× and ÷ problems</div>
-    </button>
-    <button class="mode-btn plusminus" onclick="selectMode('plusminus')">
-      <span class="icon">➕➖</span>
-      <div class="name">Plus & Minus</div>
-      <div class="desc">Sequential chains</div>
-    </button>
-    <button class="mode-btn timelimit" onclick="selectMode('timelimit')">
-      <span class="icon">⏱️</span>
-      <div class="name">Time Limit</div>
-      <div class="desc">Race the clock!</div>
-    </button>
-  </div>
-
-  <div class="card" id="options-card" style="display:none;">
-    <div class="section-title">⚙️ Settings</div>
-
-    <!-- Question count (hidden in timelimit mode) -->
-    <div id="count-section">
-      <label>Number of questions</label>
-      <div class="option-row" id="count-options">
-        <button class="opt-btn" onclick="selectCount(10, this)">10</button>
-        <button class="opt-btn" onclick="selectCount(20, this)">20</button>
-        <button class="opt-btn" onclick="selectCount(30, this)">30</button>
-        <button class="opt-btn" onclick="selectCountCustom(this)">Custom</button>
-        <div class="custom-count-wrap" id="custom-count-wrap">
-          <input type="number" id="custom-count-input" min="1" max="200" placeholder="?" oninput="onCustomCountInput(this)">
-        </div>
-      </div>
+    <div class="mode-grid">
+      <button class="mode-btn multiply" onclick="selectMode('multiply')">
+        <span class="icon">✖️➗</span>
+        <div class="name">Multiply & Divide</div>
+        <div class="desc">× and ÷ problems</div>
+      </button>
+      <button class="mode-btn plusminus" onclick="selectMode('plusminus')">
+        <span class="icon">➕➖</span>
+        <div class="name">Plus & Minus</div>
+        <div class="desc">Sequential chains</div>
+      </button>
+      <button class="mode-btn timelimit" onclick="selectMode('timelimit')">
+        <span class="icon">⏱️</span>
+        <div class="name">Time Limit</div>
+        <div class="desc">Race the clock!</div>
+      </button>
     </div>
 
-    <!-- Time limit (shown only in timelimit mode) -->
-    <div id="timelimit-section" style="display:none;">
-      <div class="time-limit-wrap">
-        <label>Time limit</label>
-        <div class="time-limit-row">
-          <button class="time-btn" onclick="selectTimeLimit(60, this)">1 min</button>
-          <button class="time-btn" onclick="selectTimeLimit(120, this)">2 min</button>
-          <button class="time-btn" onclick="selectTimeLimit(300, this)">5 min</button>
-          <button class="time-btn" onclick="selectTimeLimitCustom(this)">Custom</button>
-          <div class="custom-time-wrap" id="custom-time-wrap">
-            <input type="number" id="custom-time-input" min="10" max="3600" placeholder="sec" oninput="onCustomTimeInput(this)">
+    <div class="card" id="options-card" style="display:none;">
+      <div class="section-title">⚙️ Settings</div>
+
+      <!-- Question count (hidden in timelimit mode) -->
+      <div id="count-section">
+        <label>Number of questions</label>
+        <div class="option-row" id="count-options">
+          <button class="opt-btn" onclick="selectCount(10, this)">10</button>
+          <button class="opt-btn" onclick="selectCount(20, this)">20</button>
+          <button class="opt-btn" onclick="selectCount(30, this)">30</button>
+          <button class="opt-btn" onclick="selectCountCustom(this)">Custom</button>
+          <div class="custom-count-wrap" id="custom-count-wrap">
+            <input type="number" id="custom-count-input" min="1" max="200" placeholder="?"
+              oninput="onCustomCountInput(this)">
           </div>
         </div>
       </div>
-      <label>Question type</label>
-      <div class="option-row">
-        <button class="opt-btn" id="tl-type-mul" onclick="selectTLType('multiply', this)">✖️ Multiply/Divide</button>
-        <button class="opt-btn" id="tl-type-seq" onclick="selectTLType('plusminus', this)">➕ Plus/Minus</button>
+
+      <!-- Time limit (shown only in timelimit mode) -->
+      <div id="timelimit-section" style="display:none;">
+        <div class="time-limit-wrap">
+          <label>Time limit</label>
+          <div class="time-limit-row">
+            <button class="time-btn" onclick="selectTimeLimit(60, this)">1 min</button>
+            <button class="time-btn" onclick="selectTimeLimit(120, this)">2 min</button>
+            <button class="time-btn" onclick="selectTimeLimit(300, this)">5 min</button>
+            <button class="time-btn" onclick="selectTimeLimitCustom(this)">Custom</button>
+            <div class="custom-time-wrap" id="custom-time-wrap">
+              <input type="number" id="custom-time-input" min="10" max="3600" placeholder="sec"
+                oninput="onCustomTimeInput(this)">
+            </div>
+          </div>
+        </div>
+        <label>Question type</label>
+        <div class="option-row">
+          <button class="opt-btn" id="tl-type-mul" onclick="selectTLType('multiply', this)">✖️ Multiply/Divide</button>
+          <button class="opt-btn" id="tl-type-seq" onclick="selectTLType('plusminus', this)">➕ Plus/Minus</button>
+        </div>
       </div>
-    </div>
 
-    <!-- Delay (plusminus modes) -->
-    <div id="delay-options" style="display:none; margin-bottom:10px;">
-      <label>Number display delay: <span id="delay-val">2.0s</span></label>
-      <div class="range-row">
-        <span>0.5s</span>
-        <input type="range" min="5" max="50" value="20" step="1" id="delay-slider" oninput="updateDelay(this.value)">
-        <span>5s</span>
+      <!-- Delay (plusminus modes) -->
+      <div id="delay-options" style="display:none; margin-bottom:10px;">
+        <label>Number display delay: <span id="delay-val">2.0s</span></label>
+        <div class="range-row">
+          <span>0.5s</span>
+          <input type="range" min="5" max="50" value="20" step="1" id="delay-slider" oninput="updateDelay(this.value)">
+          <span>5s</span>
+        </div>
       </div>
-    </div>
 
-    <button class="big-btn start" id="start-btn" onclick="startTest()" disabled>START!</button>
+      <button class="big-btn start" id="start-btn" onclick="startTest()" disabled>START!</button>
+    </div>
   </div>
-</div>
 
-<!-- ═══════════════ TEST — MULTIPLY ═══════════════ -->
-<div id="screen-test-multiply" class="screen">
-  <h1>✖️➗</h1>
-  <div class="progress-bar-wrap" style="width:100%;max-width:600px;">
-    <div class="progress-bar" id="pb-multiply"></div>
-  </div>
-  <div class="top-row">
-    <div class="question-counter" id="qc-multiply"></div>
-    <div class="live-timer" id="timer-multiply">0.0s</div>
-  </div>
-  <div class="card" style="max-width:500px;">
-    <div id="mul-waiting" class="waiting-overlay">
-      <div class="waiting-text">Ready?</div>
+  <!-- ═══════════════ TEST — MULTIPLY ═══════════════ -->
+  <div id="screen-test-multiply" class="screen">
+    <h1>✖️➗</h1>
+    <div class="progress-bar-wrap" style="width:100%;max-width:600px;">
+      <div class="progress-bar" id="pb-multiply"></div>
     </div>
-    <div id="mul-question-wrap" style="display:none;">
-      <div class="question-display" id="multiply-question"></div>
+    <div class="top-row">
+      <div class="question-counter" id="qc-multiply"></div>
+      <div class="live-timer" id="timer-multiply">0.0s</div>
     </div>
-    <p class="hint" id="mul-hint">Remember the answer in your head!</p>
-    <div class="action-prompt">
-      <span class="space-key-wrap"><span class="space-key" id="space-key-mul">SPACE</span></span>
-      <button class="tap-btn" id="tap-btn-mul" ontouchstart="handleTap('multiply')" onclick="handleTap('multiply')">TAP ▶</button>
-      <span class="action-label" id="mul-action-label">start</span>
-    </div>
-  </div>
-  <button class="big-btn back" onclick="goMenu()" style="max-width:500px;margin-top:14px;">← Back to menu</button>
-</div>
-
-<!-- ═══════════════ TEST — PLUS/MINUS ═══════════════ -->
-<div id="screen-test-plusminus" class="screen">
-  <h1>➕➖</h1>
-  <div class="progress-bar-wrap" style="width:100%;max-width:600px;">
-    <div class="progress-bar" id="pb-plusminus"></div>
-  </div>
-  <div class="top-row">
-    <div class="question-counter" id="qc-plusminus"></div>
-    <div class="live-timer" id="timer-plusminus">0.0s</div>
-  </div>
-  <div class="card" style="max-width:500px;">
-    <div class="seq-display">
-      <div class="seq-number" id="seq-number-display"></div>
-    </div>
-    <div class="seq-playing-label" id="seq-playing-label">▶ playing…</div>
-    <p class="hint">Numbers appear one by one — keep a running total!</p>
-    <div class="action-prompt">
-      <span class="space-key-wrap"><span class="space-key" id="space-key-seq">SPACE</span></span>
-      <button class="tap-btn" id="tap-btn-seq" ontouchstart="handleTap('plusminus')" onclick="handleTap('plusminus')">TAP ▶</button>
-      <span class="action-label" id="seq-action-label">start</span>
-    </div>
-  </div>
-  <button class="big-btn back" onclick="goMenu()" style="max-width:500px;margin-top:14px;">← Back to menu</button>
-</div>
-
-<!-- ═══════════════ TEST — TIME LIMIT ═══════════════ -->
-<div id="screen-test-timelimit" class="screen">
-  <h1>⏱️</h1>
-  <div class="progress-bar-wrap" style="width:100%;max-width:600px;">
-    <div class="progress-bar" id="pb-timelimit"></div>
-  </div>
-  <div class="top-row" style="max-width:500px;">
-    <div class="question-counter" id="qc-timelimit">Q 1</div>
-    <div class="countdown-timer" id="countdown-timer">—</div>
-    <div class="live-timer" id="timer-timelimit">0.0s</div>
-  </div>
-  <div class="card" style="max-width:500px;">
-    <!-- multiply sub-view -->
-    <div id="tl-mul-view">
-      <div id="tl-mul-waiting" class="waiting-overlay">
+    <div class="card" style="max-width:500px;">
+      <div id="mul-waiting" class="waiting-overlay">
         <div class="waiting-text">Ready?</div>
       </div>
-      <div id="tl-mul-question-wrap" style="display:none;">
-        <div class="question-display" id="tl-mul-question"></div>
+      <div id="mul-question-wrap" style="display:none;">
+        <div class="question-display" id="multiply-question"></div>
+      </div>
+      <p class="hint" id="mul-hint">Remember the answer in your head!</p>
+      <div class="action-prompt">
+        <span class="space-key-wrap"><span class="space-key" id="space-key-mul">SPACE</span></span>
+        <button class="tap-btn" id="tap-btn-mul" onclick="handleTap('multiply')">TAP ▶</button>
+        <span class="action-label" id="mul-action-label">start</span>
       </div>
     </div>
-    <!-- plusminus sub-view -->
-    <div id="tl-seq-view" style="display:none;">
+    <button class="big-btn back" onclick="goMenu()" style="max-width:500px;margin-top:14px;">← Back to menu</button>
+  </div>
+
+  <!-- ═══════════════ TEST — PLUS/MINUS ═══════════════ -->
+  <div id="screen-test-plusminus" class="screen">
+    <h1>➕➖</h1>
+    <div class="progress-bar-wrap" style="width:100%;max-width:600px;">
+      <div class="progress-bar" id="pb-plusminus"></div>
+    </div>
+    <div class="top-row">
+      <div class="question-counter" id="qc-plusminus"></div>
+      <div class="live-timer" id="timer-plusminus">0.0s</div>
+    </div>
+    <div class="card" style="max-width:500px;">
       <div class="seq-display">
-        <div class="seq-number" id="tl-seq-number"></div>
+        <div class="seq-number" id="seq-number-display"></div>
       </div>
-      <div class="seq-playing-label" id="tl-seq-playing-label">▶ playing…</div>
+      <div class="seq-playing-label" id="seq-playing-label">▶ playing…</div>
+      <p class="hint">Numbers appear one by one — keep a running total!</p>
+      <div class="action-prompt">
+        <span class="space-key-wrap"><span class="space-key" id="space-key-seq">SPACE</span></span>
+        <button class="tap-btn" id="tap-btn-seq" onclick="handleTap('plusminus')">TAP ▶</button>
+        <span class="action-label" id="seq-action-label">start</span>
+      </div>
     </div>
-    <p class="hint">Remember the answer — press SPACE / TAP for next!</p>
-    <div class="action-prompt">
-      <span class="space-key-wrap"><span class="space-key" id="space-key-tl">SPACE</span></span>
-      <button class="tap-btn" id="tap-btn-tl" ontouchstart="handleTap('timelimit')" onclick="handleTap('timelimit')">TAP ▶</button>
-      <span class="action-label" id="tl-action-label">start</span>
+    <button class="big-btn back" onclick="goMenu()" style="max-width:500px;margin-top:14px;">← Back to menu</button>
+  </div>
+
+  <!-- ═══════════════ TEST — TIME LIMIT ═══════════════ -->
+  <div id="screen-test-timelimit" class="screen">
+    <h1>⏱️</h1>
+    <div class="progress-bar-wrap" style="width:100%;max-width:600px;">
+      <div class="progress-bar" id="pb-timelimit"></div>
+    </div>
+    <div class="top-row" style="max-width:500px;">
+      <div class="question-counter" id="qc-timelimit">Q 1</div>
+      <div class="countdown-timer" id="countdown-timer">—</div>
+      <div class="live-timer" id="timer-timelimit">0.0s</div>
+    </div>
+    <div class="card" style="max-width:500px;">
+      <!-- multiply sub-view -->
+      <div id="tl-mul-view">
+        <div id="tl-mul-waiting" class="waiting-overlay">
+          <div class="waiting-text">Ready?</div>
+        </div>
+        <div id="tl-mul-question-wrap" style="display:none;">
+          <div class="question-display" id="tl-mul-question"></div>
+        </div>
+      </div>
+      <!-- plusminus sub-view -->
+      <div id="tl-seq-view" style="display:none;">
+        <div class="seq-display">
+          <div class="seq-number" id="tl-seq-number"></div>
+        </div>
+        <div class="seq-playing-label" id="tl-seq-playing-label">▶ playing…</div>
+      </div>
+      <p class="hint">Remember the answer — press SPACE / TAP for next!</p>
+      <div class="action-prompt">
+        <span class="space-key-wrap"><span class="space-key" id="space-key-tl">SPACE</span></span>
+        <button class="tap-btn" id="tap-btn-tl" onclick="handleTap('timelimit')">TAP ▶</button>
+        <span class="action-label" id="tl-action-label">start</span>
+      </div>
+    </div>
+    <button class="big-btn back" onclick="goMenu()" style="max-width:500px;margin-top:14px;">← Back to menu</button>
+  </div>
+
+  <!-- ═══════════════ ANSWERS ═══════════════ -->
+  <div id="screen-answers" class="screen">
+    <h1>📝 Your Answers</h1>
+    <p class="subtitle">Fill in what you remember!</p>
+    <div class="card" style="max-width:600px;">
+      <div class="answers-grid" id="answers-grid"></div>
+      <button class="big-btn submit" onclick="checkAnswers()">Check Answers ✓</button>
     </div>
   </div>
-  <button class="big-btn back" onclick="goMenu()" style="max-width:500px;margin-top:14px;">← Back to menu</button>
-</div>
 
-<!-- ═══════════════ ANSWERS ═══════════════ -->
-<div id="screen-answers" class="screen">
-  <h1>📝 Your Answers</h1>
-  <p class="subtitle">Fill in what you remember!</p>
-  <div class="card" style="max-width:600px;">
-    <div class="answers-grid" id="answers-grid"></div>
-    <button class="big-btn submit" onclick="checkAnswers()">Check Answers ✓</button>
-  </div>
-</div>
-
-<!-- ═══════════════ RESULTS ═══════════════ -->
-<div id="screen-results" class="screen">
-  <h1>🎉 Results</h1>
-  <div class="card" style="max-width:620px;">
-    <div class="score-circle" id="score-circle">
-      <div class="score-num" id="score-num"></div>
-      <div class="score-label" id="score-label"></div>
+  <!-- ═══════════════ RESULTS ═══════════════ -->
+  <div id="screen-results" class="screen">
+    <h1>🎉 Results</h1>
+    <div class="card" style="max-width:620px;">
+      <div class="score-circle" id="score-circle">
+        <div class="score-num" id="score-num"></div>
+        <div class="score-label" id="score-label"></div>
+      </div>
+      <div class="result-msg" id="result-msg"></div>
+      <div class="time-summary">
+        <div class="time-pill"><span class="pill-label">Total Time</span><span id="res-total-time">—</span></div>
+        <div class="time-pill"><span class="pill-label">Avg / Question</span><span id="res-avg-time">—</span></div>
+        <div class="time-pill"><span class="pill-label">Fastest</span><span id="res-fastest">—</span></div>
+        <div class="time-pill"><span class="pill-label">Slowest</span><span id="res-slowest">—</span></div>
+      </div>
+      <div class="sep"></div>
+      <div class="results-list" id="results-list"></div>
+      <button class="big-btn submit" onclick="goMenu()" style="margin-top:20px;">Play Again 🔄</button>
     </div>
-    <div class="result-msg" id="result-msg"></div>
-    <div class="time-summary">
-      <div class="time-pill"><span class="pill-label">Total Time</span><span id="res-total-time">—</span></div>
-      <div class="time-pill"><span class="pill-label">Avg / Question</span><span id="res-avg-time">—</span></div>
-      <div class="time-pill"><span class="pill-label">Fastest</span><span id="res-fastest">—</span></div>
-      <div class="time-pill"><span class="pill-label">Slowest</span><span id="res-slowest">—</span></div>
-    </div>
-    <div class="sep"></div>
-    <div class="results-list" id="results-list"></div>
-    <button class="big-btn submit" onclick="goMenu()" style="margin-top:20px;">Play Again 🔄</button>
   </div>
-</div>
 
-<script>
-// ═══════════════════════════════════════════════
-// TOUCH DETECTION
-// ═══════════════════════════════════════════════
-const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
-if (isTouch) document.body.classList.add('is-touch');
+  <script>
+    // ═══════════════════════════════════════════════
+    // TOUCH DETECTION
+    // ═══════════════════════════════════════════════
+    const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+    if (isTouch) document.body.classList.add('is-touch');
 
-// ═══════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════
-let mode        = null;   // 'multiply' | 'plusminus' | 'timelimit'
-let tlSubMode   = null;   // for timelimit: 'multiply' | 'plusminus'
-let questionCount = null; // number of questions (null in timelimit mode)
-let timeLimitSec = null;  // seconds for timelimit mode
-let delayMs     = 2000;
-let testActive  = false;
+    // ═══════════════════════════════════════════════
+    // STATE
+    // ═══════════════════════════════════════════════
+    let mode = null;   // 'multiply' | 'plusminus' | 'timelimit'
+    let tlSubMode = null;   // for timelimit: 'multiply' | 'plusminus'
+    let questionCount = null; // number of questions (null in timelimit mode)
+    let timeLimitSec = null;  // seconds for timelimit mode
+    let delayMs = 2000;
+    let testActive = false;
 
-// Unified question log — built on the fly
-// Each entry: { q: {display, answer, nums?}, given: null|number, time: ms, isCorrect: bool }
-let questionLog  = [];
-let currentQ     = 0;
+    // Unified question log — built on the fly
+    // Each entry: { q: {display, answer, nums?}, given: null|number, time: ms, isCorrect: bool }
+    let questionLog = [];
+    let currentQ = 0;
 
-// Per-question timing
-let qStartTime   = null;
-let liveTimerRAF = null;
-let liveTimerActive = false;
-let liveTimerId  = null;
+    // Per-question timing
+    let qStartTime = null;
+    let liveTimerRAF = null;
+    let liveTimerActive = false;
+    let liveTimerId = null;
 
-// Countdown (timelimit mode)
-let countdownRAF     = null;
-let countdownActive  = false;
-let countdownEndTime = null;
-let countdownIntervalId = null;
+    // Countdown (timelimit mode)
+    let countdownRAF = null;
+    let countdownActive = false;
+    let countdownEndTime = null;
+    let countdownIntervalId = null;
 
-// Sequence state (shared for plusminus & timelimit-seq)
-let seqRunning = false;
-let seqDone    = false;
-let seqStep    = 0;
-let seqQueue   = [];
-let seqTimeout = null;
-let seqNumElId = null; // element id for seq number display
-let seqPlayingLabelId = null;
-let seqActionLabelId  = null;
-let seqSpaceKeyId     = null;
-let seqTapBtnId       = null;
+    // Sequence state (shared for plusminus & timelimit-seq)
+    let seqRunning = false;
+    let seqDone = false;
+    let seqStep = 0;
+    let seqQueue = [];
+    let seqTimeout = null;
+    let seqNumElId = null; // element id for seq number display
+    let seqPlayingLabelId = null;
+    let seqActionLabelId = null;
+    let seqSpaceKeyId = null;
+    let seqTapBtnId = null;
 
-// Multiply state
-let mulWaiting = true; // waiting for first space press
+    // Multiply state
+    let mulWaiting = true; // waiting for first space press
 
-// ═══════════════════════════════════════════════
-// MENU
-// ═══════════════════════════════════════════════
-function selectMode(m) {
-  mode = m;
-  tlSubMode = null;
-  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('selected'));
-  document.querySelector('.mode-btn.' + m).classList.add('selected');
-  document.getElementById('options-card').style.display = 'block';
+    // ═══════════════════════════════════════════════
+    // MENU
+    // ═══════════════════════════════════════════════
+    function selectMode(m) {
+      mode = m;
+      tlSubMode = null;
+      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('selected'));
+      document.querySelector('.mode-btn.' + m).classList.add('selected');
+      document.getElementById('options-card').style.display = 'block';
 
-  const isSeq = (m === 'plusminus');
-  const isTL  = (m === 'timelimit');
+      const isSeq = (m === 'plusminus');
+      const isTL = (m === 'timelimit');
 
-  document.getElementById('count-section').style.display    = isTL ? 'none' : 'block';
-  document.getElementById('timelimit-section').style.display = isTL ? 'block' : 'none';
-  document.getElementById('delay-options').style.display     = isSeq ? 'block' : 'none';
+      document.getElementById('count-section').style.display = isTL ? 'none' : 'block';
+      document.getElementById('timelimit-section').style.display = isTL ? 'block' : 'none';
+      document.getElementById('delay-options').style.display = isSeq ? 'block' : 'none';
 
-  // Reset count selection when switching modes
-  if (!isTL) {
-    document.querySelectorAll('#count-options .opt-btn').forEach(b => b.classList.remove('selected'));
-    document.getElementById('custom-count-wrap').classList.remove('visible');
-    questionCount = null;
-  } else {
-    questionCount = Infinity; // timelimit has no question limit
-  }
+      // Reset count selection when switching modes
+      if (!isTL) {
+        document.querySelectorAll('#count-options .opt-btn').forEach(b => b.classList.remove('selected'));
+        document.getElementById('custom-count-wrap').classList.remove('visible');
+        questionCount = null;
+      } else {
+        questionCount = Infinity; // timelimit has no question limit
+      }
 
-  checkStartReady();
-}
+      checkStartReady();
+    }
 
-function selectCount(n, btn) {
-  questionCount = n;
-  document.querySelectorAll('#count-options .opt-btn').forEach(b => b.classList.remove('selected'));
-  document.getElementById('custom-count-input').classList.remove('selected-custom');
-  document.getElementById('custom-count-wrap').classList.remove('visible');
-  btn.classList.add('selected');
-  checkStartReady();
-}
+    function selectCount(n, btn) {
+      questionCount = n;
+      document.querySelectorAll('#count-options .opt-btn').forEach(b => b.classList.remove('selected'));
+      document.getElementById('custom-count-input').classList.remove('selected-custom');
+      document.getElementById('custom-count-wrap').classList.remove('visible');
+      btn.classList.add('selected');
+      checkStartReady();
+    }
 
-function selectCountCustom(btn) {
-  document.querySelectorAll('#count-options .opt-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  document.getElementById('custom-count-wrap').classList.add('visible');
-  const inp = document.getElementById('custom-count-input');
-  inp.focus();
-  const val = parseInt(inp.value);
-  questionCount = (val > 0) ? val : null;
-  checkStartReady();
-}
+    function selectCountCustom(btn) {
+      document.querySelectorAll('#count-options .opt-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      document.getElementById('custom-count-wrap').classList.add('visible');
+      const inp = document.getElementById('custom-count-input');
+      inp.focus();
+      const val = parseInt(inp.value);
+      questionCount = (val > 0) ? val : null;
+      checkStartReady();
+    }
 
-function onCustomCountInput(inp) {
-  const val = parseInt(inp.value);
-  questionCount = (val > 0) ? val : null;
-  if (val > 0) inp.classList.add('selected-custom');
-  else inp.classList.remove('selected-custom');
-  checkStartReady();
-}
+    function onCustomCountInput(inp) {
+      const val = parseInt(inp.value);
+      questionCount = (val > 0) ? val : null;
+      if (val > 0) inp.classList.add('selected-custom');
+      else inp.classList.remove('selected-custom');
+      checkStartReady();
+    }
 
-function selectTimeLimit(secs, btn) {
-  timeLimitSec = secs;
-  document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
-  document.getElementById('custom-time-wrap').classList.remove('visible');
-  document.getElementById('custom-time-input').classList.remove('selected-custom');
-  btn.classList.add('selected');
-  checkStartReady();
-}
+    function selectTimeLimit(secs, btn) {
+      timeLimitSec = secs;
+      document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
+      document.getElementById('custom-time-wrap').classList.remove('visible');
+      document.getElementById('custom-time-input').classList.remove('selected-custom');
+      btn.classList.add('selected');
+      checkStartReady();
+    }
 
-function selectTimeLimitCustom(btn) {
-  document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  document.getElementById('custom-time-wrap').classList.add('visible');
-  const inp = document.getElementById('custom-time-input');
-  inp.focus();
-  const val = parseInt(inp.value);
-  timeLimitSec = (val >= 10) ? val : null;
-  checkStartReady();
-}
+    function selectTimeLimitCustom(btn) {
+      document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      document.getElementById('custom-time-wrap').classList.add('visible');
+      const inp = document.getElementById('custom-time-input');
+      inp.focus();
+      const val = parseInt(inp.value);
+      timeLimitSec = (val >= 10) ? val : null;
+      checkStartReady();
+    }
 
-function onCustomTimeInput(inp) {
-  const val = parseInt(inp.value);
-  timeLimitSec = (val >= 10) ? val : null;
-  if (val >= 10) inp.classList.add('selected-custom');
-  else inp.classList.remove('selected-custom');
-  checkStartReady();
-}
+    function onCustomTimeInput(inp) {
+      const val = parseInt(inp.value);
+      timeLimitSec = (val >= 10) ? val : null;
+      if (val >= 10) inp.classList.add('selected-custom');
+      else inp.classList.remove('selected-custom');
+      checkStartReady();
+    }
 
-function selectTLType(t, btn) {
-  tlSubMode = t;
-  document.getElementById('tl-type-mul').classList.remove('selected');
-  document.getElementById('tl-type-seq').classList.remove('selected');
-  btn.classList.add('selected');
-  document.getElementById('delay-options').style.display = (t === 'plusminus') ? 'block' : 'none';
-  checkStartReady();
-}
+    function selectTLType(t, btn) {
+      tlSubMode = t;
+      document.getElementById('tl-type-mul').classList.remove('selected');
+      document.getElementById('tl-type-seq').classList.remove('selected');
+      btn.classList.add('selected');
+      document.getElementById('delay-options').style.display = (t === 'plusminus') ? 'block' : 'none';
+      checkStartReady();
+    }
 
-function updateDelay(val) {
-  delayMs = val * 100;
-  document.getElementById('delay-val').textContent = (delayMs / 1000).toFixed(1) + 's';
-}
+    function updateDelay(val) {
+      delayMs = val * 100;
+      document.getElementById('delay-val').textContent = (delayMs / 1000).toFixed(1) + 's';
+    }
 
-function checkStartReady() {
-  let ready = false;
-  if (mode === 'multiply' || mode === 'plusminus') ready = (questionCount > 0);
-  if (mode === 'timelimit') ready = (timeLimitSec > 0 && tlSubMode !== null);
-  document.getElementById('start-btn').disabled = !ready;
-}
+    function checkStartReady() {
+      let ready = false;
+      if (mode === 'multiply' || mode === 'plusminus') ready = (questionCount > 0);
+      if (mode === 'timelimit') ready = (timeLimitSec > 0 && tlSubMode !== null);
+      document.getElementById('start-btn').disabled = !ready;
+    }
 
-// ═══════════════════════════════════════════════
-// INPUT — SPACE + TOUCH TAP
-// ═══════════════════════════════════════════════
-document.addEventListener('keydown', (e) => {
-  if (e.code !== 'Space') return;
-  const active = document.querySelector('.screen.active');
-  if (!active || !testActive) return;
-  e.preventDefault();
-  dispatchAction(active.id);
-});
-
-function handleTap(screenMode) {
-  if (!testActive) return;
-  // Prevent double-fire from ontouchstart + onclick
-  dispatchAction('screen-test-' + screenMode);
-}
-
-function dispatchAction(screenId) {
-  if (screenId === 'screen-test-multiply') {
-    pulseKey('space-key-mul');
-    handleMultiplyAction();
-  } else if (screenId === 'screen-test-plusminus') {
-    pulseKey('space-key-seq');
-    handleSeqAction();
-  } else if (screenId === 'screen-test-timelimit') {
-    pulseKey('space-key-tl');
-    handleTLAction();
-  }
-}
-
-function pulseKey(id) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.classList.remove('pulse');
-  void el.offsetWidth;
-  el.classList.add('pulse');
-  setTimeout(() => el.classList.remove('pulse'), 200);
-}
-
-// ═══════════════════════════════════════════════
-// QUESTION GENERATORS
-// ═══════════════════════════════════════════════
-function genMultiply() {
-  if (Math.random() < 0.5) {
-    const a = Math.floor(Math.random() * 50) + 2;
-    const b = Math.floor(Math.random() * 9) + 2;
-    return { display: `${a} × ${b}`, answer: a * b };
-  } else {
-    const b = Math.floor(Math.random() * 9) + 2;
-    const ans = Math.floor(Math.random() * 50) + 2;
-    return { display: `${b * ans} ÷ ${b}`, answer: ans };
-  }
-}
-
-function genPlusMinus() {
-  let nums = [];
-  let first = Math.floor(Math.random() * 200) + 10;
-  let running = first;
-  nums.push({ value: first, op: null });
-  for (let i = 1; i < 4; i++) {
-    const op = Math.random() < 0.5 ? '+' : '-';
-    let n = Math.floor(Math.random() * 50) + 1;
-    if (op === '-' && running - n < 0) n = Math.floor(running * 0.4);
-    running = op === '+' ? running + n : running - n;
-    nums.push({ value: n, op });
-  }
-  const display = nums.map((n, i) => i === 0 ? String(n.value) : (n.op + n.value)).join(' ');
-  return { nums, answer: running, display };
-}
-
-function generateNextQuestion() {
-  const subMode = (mode === 'timelimit') ? tlSubMode : mode;
-  return subMode === 'multiply' ? genMultiply() : genPlusMinus();
-}
-
-// ═══════════════════════════════════════════════
-// START TEST
-// ═══════════════════════════════════════════════
-function startTest() {
-  questionLog = [];
-  currentQ    = 0;
-  testActive  = true;
-
-  if (mode === 'multiply') {
-    showScreen('screen-test-multiply');
-    mulWaiting = true;
-    pushNextQuestion(); // generate Q1 and add to log
-    // Show waiting overlay for first question
-    document.getElementById('mul-waiting').style.display = 'flex';
-    document.getElementById('mul-question-wrap').style.display = 'none';
-    document.getElementById('mul-action-label').textContent = 'start';
-    document.getElementById('pb-multiply').style.width = '0%';
-    document.getElementById('qc-multiply').textContent = `Q 1 / ${questionCount}`;
-    document.getElementById('timer-multiply').textContent = '0.0s';
-  } else if (mode === 'plusminus') {
-    showScreen('screen-test-plusminus');
-    pushNextQuestion();
-    prepareSeqQuestion({
-      numElId:       'seq-number-display',
-      playingLblId:  'seq-playing-label',
-      actionLblId:   'seq-action-label',
-      spaceKeyId:    'space-key-seq',
-      tapBtnId:      'tap-btn-seq',
-      pbId:          'pb-plusminus',
-      qcId:          'qc-plusminus',
-      timerElId:     'timer-plusminus',
+    // ═══════════════════════════════════════════════
+    // INPUT — SPACE + TOUCH TAP
+    // ═══════════════════════════════════════════════
+    document.addEventListener('keydown', (e) => {
+      if (e.code !== 'Space') return;
+      const active = document.querySelector('.screen.active');
+      if (!active || !testActive) return;
+      e.preventDefault();
+      dispatchAction(active.id);
     });
-  } else if (mode === 'timelimit') {
-    showScreen('screen-test-timelimit');
-    // show correct sub-view
-    document.getElementById('tl-mul-view').style.display  = tlSubMode === 'multiply'  ? 'block' : 'none';
-    document.getElementById('tl-seq-view').style.display  = tlSubMode === 'plusminus' ? 'block' : 'none';
-    mulWaiting = true;
-    pushNextQuestion();
-    if (tlSubMode === 'multiply') {
-      // Show waiting overlay for first question
-      document.getElementById('tl-mul-waiting').style.display = 'flex';
-      document.getElementById('tl-mul-question-wrap').style.display = 'none';
-      document.getElementById('tl-action-label').textContent = 'start';
-      document.getElementById('qc-timelimit').textContent = 'Q 1';
-      document.getElementById('timer-timelimit').textContent = '0.0s';
-    } else {
-      prepareSeqQuestion({
-        numElId:      'tl-seq-number',
-        playingLblId: 'tl-seq-playing-label',
-        actionLblId:  'tl-action-label',
-        spaceKeyId:   'space-key-tl',
-        tapBtnId:     'tap-btn-tl',
-        pbId:         'pb-timelimit',
-        qcId:         'qc-timelimit',
-        timerElId:    'timer-timelimit',
-      });
+
+    function handleTap(screenMode) {
+      if (!testActive) return;
+      // Prevent double-fire from ontouchstart + onclick
+      dispatchAction('screen-test-' + screenMode);
     }
-    // Start countdown (doesn't tick until first action)
-    startCountdown();
-  }
-}
 
-// Push a newly generated question into the log
-function pushNextQuestion() {
-  questionLog.push({ q: generateNextQuestion(), given: null, time: 0, isCorrect: false });
-}
-
-// ═══════════════════════════════════════════════
-// LIVE QUESTION TIMER
-// ═══════════════════════════════════════════════
-function beginTimer(timerId) {
-  liveTimerId = timerId;
-  qStartTime = performance.now();
-  liveTimerActive = true;
-  cancelAnimationFrame(liveTimerRAF);
-  function tick() {
-    if (!liveTimerActive) return;
-    const el = document.getElementById(liveTimerId);
-    if (el) el.textContent = ((performance.now() - qStartTime) / 1000).toFixed(1) + 's';
-    liveTimerRAF = requestAnimationFrame(tick);
-  }
-  tick();
-}
-
-function stopTimer() {
-  liveTimerActive = false;
-  cancelAnimationFrame(liveTimerRAF);
-  questionLog[currentQ].time = Math.round(performance.now() - qStartTime);
-}
-
-// ═══════════════════════════════════════════════
-// COUNTDOWN TIMER (timelimit mode)
-// ═══════════════════════════════════════════════
-let countdownStarted = false;
-
-function startCountdown() {
-  countdownStarted = false; // starts ticking on first action
-  document.getElementById('countdown-timer').textContent = fmtTime(timeLimitSec * 1000);
-  document.getElementById('countdown-timer').classList.remove('urgent');
-  // Initialize progress bar at 100% (will drain as countdown runs)
-  document.getElementById('pb-timelimit').style.width = '100%';
-}
-
-function beginCountdown() {
-  if (countdownStarted) return;
-  countdownStarted = true;
-  countdownEndTime = performance.now() + timeLimitSec * 1000;
-  function tick() {
-    if (!testActive) return;
-    const remaining = countdownEndTime - performance.now();
-    const el = document.getElementById('countdown-timer');
-    if (remaining <= 0) {
-      el.textContent = '0.0s';
-      endTimeLimitTest();
-      return;
+    function dispatchAction(screenId) {
+      if (screenId === 'screen-test-multiply') {
+        pulseKey('space-key-mul');
+        handleMultiplyAction();
+      } else if (screenId === 'screen-test-plusminus') {
+        pulseKey('space-key-seq');
+        handleSeqAction();
+      } else if (screenId === 'screen-test-timelimit') {
+        pulseKey('space-key-tl');
+        handleTLAction();
+      }
     }
-    el.textContent = fmtTime(remaining);
-    if (remaining < 10000) el.classList.add('urgent');
-    // update progress bar (drains from 100→0)
-    document.getElementById('pb-timelimit').style.width = (remaining / (timeLimitSec * 1000) * 100) + '%';
-    countdownRAF = requestAnimationFrame(tick);
-  }
-  tick();
-}
 
-function endTimeLimitTest() {
-  testActive = false;
-  stopTimer();
-  clearTimeout(seqTimeout);
-  liveTimerActive = false;
-  cancelAnimationFrame(liveTimerRAF);
-  cancelAnimationFrame(countdownRAF);
-  // Remove current incomplete question if seq was still running / multiply waiting
-  // We keep only questions that were fully "shown" (timer started), i.e. time > 0
-  // The last entry might have time=0 if user never got to start it
-  if (questionLog[currentQ] && questionLog[currentQ].time === 0) {
-    questionLog.splice(currentQ, 1);
-  }
-  showAnswerScreen();
-}
+    function pulseKey(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.remove('pulse');
+      void el.offsetWidth;
+      el.classList.add('pulse');
+      setTimeout(() => el.classList.remove('pulse'), 200);
+    }
 
-// ═══════════════════════════════════════════════
-// MULTIPLY MODE
-// ═══════════════════════════════════════════════
-function renderMultiplyQuestion() {
-  const entry = questionLog[currentQ];
-  document.getElementById('pb-multiply').style.width =
-    questionCount === Infinity ? '0%' : ((currentQ / questionCount) * 100) + '%';
-  document.getElementById('qc-multiply').textContent =
-    questionCount === Infinity ? `Q ${currentQ + 1}` : `Q ${currentQ + 1} / ${questionCount}`;
-  document.getElementById('timer-multiply').textContent = '0.0s';
-  document.getElementById('mul-waiting').style.display = 'none';
-  document.getElementById('mul-question-wrap').style.display = 'block';
-  const parts = entry.q.display.split(' ');
-  document.getElementById('multiply-question').innerHTML =
-    `${parts[0]} <span class="op">${parts[1]}</span> ${parts[2]}`;
-  const isLast = (questionCount !== Infinity && currentQ === questionCount - 1);
-  document.getElementById('mul-action-label').textContent = isLast ? 'finish test' : 'next question';
-}
+    // ═══════════════════════════════════════════════
+    // QUESTION GENERATORS
+    // ═══════════════════════════════════════════════
+    function genMultiply() {
+      if (Math.random() < 0.5) {
+        const a = Math.floor(Math.random() * 50) + 2;
+        const b = Math.floor(Math.random() * 9) + 2;
+        return { display: `${a} × ${b}`, answer: a * b };
+      } else {
+        const b = Math.floor(Math.random() * 9) + 2;
+        const ans = Math.floor(Math.random() * 50) + 2;
+        return { display: `${b * ans} ÷ ${b}`, answer: ans };
+      }
+    }
 
-function handleMultiplyAction() {
-  if (mulWaiting) {
-    // Very first press only — show first question and start timer
-    mulWaiting = false;
-    renderMultiplyQuestion();
-    beginTimer('timer-multiply');
-    return;
-  }
-  // Space = record time + immediately show next question
-  stopTimer();
-  currentQ++;
-  if (questionCount !== Infinity && currentQ >= questionCount) {
-    showAnswerScreen();
-    return;
-  }
-  pushNextQuestion();
-  renderMultiplyQuestion();
-  beginTimer('timer-multiply');
-}
+    function genPlusMinus() {
+      let nums = [];
+      let first = Math.floor(Math.random() * 200) + 10;
+      let running = first;
+      nums.push({ value: first, op: null });
+      for (let i = 1; i < 4; i++) {
+        const op = Math.random() < 0.5 ? '+' : '-';
+        let n = Math.floor(Math.random() * 50) + 1;
+        if (op === '-' && running - n < 0) n = Math.floor(running * 0.4);
+        running = op === '+' ? running + n : running - n;
+        nums.push({ value: n, op });
+      }
+      const display = nums.map((n, i) => i === 0 ? String(n.value) : (n.op + n.value)).join(' ');
+      return { nums, answer: running, display };
+    }
 
-// ═══════════════════════════════════════════════
-// TIME-LIMIT MULTIPLY sub-view
-// ═══════════════════════════════════════════════
-function renderTLMultiplyQuestion() {
-  document.getElementById('qc-timelimit').textContent = `Q ${currentQ + 1}`;
-  document.getElementById('timer-timelimit').textContent = '0.0s';
-  document.getElementById('tl-mul-waiting').style.display = 'none';
-  document.getElementById('tl-mul-question-wrap').style.display = 'block';
-  const entry = questionLog[currentQ];
-  const parts = entry.q.display.split(' ');
-  document.getElementById('tl-mul-question').innerHTML =
-    `${parts[0]} <span class="op">${parts[1]}</span> ${parts[2]}`;
-  document.getElementById('tl-action-label').textContent = 'next question';
-}
+    function generateNextQuestion() {
+      const subMode = (mode === 'timelimit') ? tlSubMode : mode;
+      return subMode === 'multiply' ? genMultiply() : genPlusMinus();
+    }
 
-function handleTLAction() {
-  if (tlSubMode === 'multiply') {
-    if (mulWaiting) {
-      // First press: show first question, start countdown and timer
-      mulWaiting = false;
-      beginCountdown();
-      renderTLMultiplyQuestion();
-      beginTimer('timer-timelimit');
-    } else {
+    // ═══════════════════════════════════════════════
+    // START TEST
+    // ═══════════════════════════════════════════════
+    function startTest() {
+      questionLog = [];
+      currentQ = 0;
+      testActive = true;
+
+      if (mode === 'multiply') {
+        showScreen('screen-test-multiply');
+        mulWaiting = true;
+        pushNextQuestion(); // generate Q1 and add to log
+        // Show waiting overlay for first question
+        document.getElementById('mul-waiting').style.display = 'flex';
+        document.getElementById('mul-question-wrap').style.display = 'none';
+        document.getElementById('mul-action-label').textContent = 'start';
+        document.getElementById('pb-multiply').style.width = '0%';
+        document.getElementById('qc-multiply').textContent = `Q 1 / ${questionCount}`;
+        document.getElementById('timer-multiply').textContent = '0.0s';
+      } else if (mode === 'plusminus') {
+        showScreen('screen-test-plusminus');
+        pushNextQuestion();
+        prepareSeqQuestion({
+          numElId: 'seq-number-display',
+          playingLblId: 'seq-playing-label',
+          actionLblId: 'seq-action-label',
+          spaceKeyId: 'space-key-seq',
+          tapBtnId: 'tap-btn-seq',
+          pbId: 'pb-plusminus',
+          qcId: 'qc-plusminus',
+          timerElId: 'timer-plusminus',
+        });
+      } else if (mode === 'timelimit') {
+        showScreen('screen-test-timelimit');
+        // show correct sub-view
+        document.getElementById('tl-mul-view').style.display = tlSubMode === 'multiply' ? 'block' : 'none';
+        document.getElementById('tl-seq-view').style.display = tlSubMode === 'plusminus' ? 'block' : 'none';
+        mulWaiting = true;
+        pushNextQuestion();
+        if (tlSubMode === 'multiply') {
+          // Show waiting overlay for first question
+          document.getElementById('tl-mul-waiting').style.display = 'flex';
+          document.getElementById('tl-mul-question-wrap').style.display = 'none';
+          document.getElementById('tl-action-label').textContent = 'start';
+          document.getElementById('qc-timelimit').textContent = 'Q 1';
+          document.getElementById('timer-timelimit').textContent = '0.0s';
+        } else {
+          prepareSeqQuestion({
+            numElId: 'tl-seq-number',
+            playingLblId: 'tl-seq-playing-label',
+            actionLblId: 'tl-action-label',
+            spaceKeyId: 'space-key-tl',
+            tapBtnId: 'tap-btn-tl',
+            pbId: 'pb-timelimit',
+            qcId: 'qc-timelimit',
+            timerElId: 'timer-timelimit',
+          });
+        }
+        // Start countdown (doesn't tick until first action)
+        startCountdown();
+      }
+    }
+
+    // Push a newly generated question into the log
+    function pushNextQuestion() {
+      questionLog.push({ q: generateNextQuestion(), given: null, time: 0, isCorrect: false });
+    }
+
+    // ═══════════════════════════════════════════════
+    // LIVE QUESTION TIMER
+    // ═══════════════════════════════════════════════
+    function beginTimer(timerId) {
+      liveTimerId = timerId;
+      qStartTime = performance.now();
+      liveTimerActive = true;
+      cancelAnimationFrame(liveTimerRAF);
+      function tick() {
+        if (!liveTimerActive) return;
+        const el = document.getElementById(liveTimerId);
+        if (el) el.textContent = ((performance.now() - qStartTime) / 1000).toFixed(1) + 's';
+        liveTimerRAF = requestAnimationFrame(tick);
+      }
+      tick();
+    }
+
+    function stopTimer() {
+      liveTimerActive = false;
+      cancelAnimationFrame(liveTimerRAF);
+      questionLog[currentQ].time = Math.round(performance.now() - qStartTime);
+    }
+
+    // ═══════════════════════════════════════════════
+    // COUNTDOWN TIMER (timelimit mode)
+    // ═══════════════════════════════════════════════
+    let countdownStarted = false;
+
+    function startCountdown() {
+      countdownStarted = false; // starts ticking on first action
+      document.getElementById('countdown-timer').textContent = fmtTime(timeLimitSec * 1000);
+      document.getElementById('countdown-timer').classList.remove('urgent');
+      // Initialize progress bar at 100% (will drain as countdown runs)
+      document.getElementById('pb-timelimit').style.width = '100%';
+    }
+
+    function beginCountdown() {
+      if (countdownStarted) return;
+      countdownStarted = true;
+      countdownEndTime = performance.now() + timeLimitSec * 1000;
+      function tick() {
+        if (!testActive) return;
+        const remaining = countdownEndTime - performance.now();
+        const el = document.getElementById('countdown-timer');
+        if (remaining <= 0) {
+          el.textContent = '0.0s';
+          endTimeLimitTest();
+          return;
+        }
+        el.textContent = fmtTime(remaining);
+        if (remaining < 10000) el.classList.add('urgent');
+        // update progress bar (drains from 100→0)
+        document.getElementById('pb-timelimit').style.width = (remaining / (timeLimitSec * 1000) * 100) + '%';
+        countdownRAF = requestAnimationFrame(tick);
+      }
+      tick();
+    }
+
+    function endTimeLimitTest() {
+      testActive = false;
+      stopTimer();
+      clearTimeout(seqTimeout);
+      liveTimerActive = false;
+      cancelAnimationFrame(liveTimerRAF);
+      cancelAnimationFrame(countdownRAF);
+      // Remove current incomplete question if seq was still running / multiply waiting
+      // We keep only questions that were fully "shown" (timer started), i.e. time > 0
+      // The last entry might have time=0 if user never got to start it
+      if (questionLog[currentQ] && questionLog[currentQ].time === 0) {
+        questionLog.splice(currentQ, 1);
+      }
+      showAnswerScreen();
+    }
+
+    // ═══════════════════════════════════════════════
+    // MULTIPLY MODE
+    // ═══════════════════════════════════════════════
+    function renderMultiplyQuestion() {
+      const entry = questionLog[currentQ];
+      document.getElementById('pb-multiply').style.width =
+        questionCount === Infinity ? '0%' : ((currentQ / questionCount) * 100) + '%';
+      document.getElementById('qc-multiply').textContent =
+        questionCount === Infinity ? `Q ${currentQ + 1}` : `Q ${currentQ + 1} / ${questionCount}`;
+      document.getElementById('timer-multiply').textContent = '0.0s';
+      document.getElementById('mul-waiting').style.display = 'none';
+      document.getElementById('mul-question-wrap').style.display = 'block';
+      const parts = entry.q.display.split(' ');
+      document.getElementById('multiply-question').innerHTML =
+        `${parts[0]} <span class="op">${parts[1]}</span> ${parts[2]}`;
+      const isLast = (questionCount !== Infinity && currentQ === questionCount - 1);
+      document.getElementById('mul-action-label').textContent = isLast ? 'finish test' : 'next question';
+    }
+
+    function handleMultiplyAction() {
+      if (mulWaiting) {
+        // Very first press only — show first question and start timer
+        mulWaiting = false;
+        renderMultiplyQuestion();
+        beginTimer('timer-multiply');
+        return;
+      }
       // Space = record time + immediately show next question
       stopTimer();
       currentQ++;
+      if (questionCount !== Infinity && currentQ >= questionCount) {
+        showAnswerScreen();
+        return;
+      }
       pushNextQuestion();
-      renderTLMultiplyQuestion();
-      beginTimer('timer-timelimit');
+      renderMultiplyQuestion();
+      beginTimer('timer-multiply');
     }
-  } else {
-    // delegate to seq handler
-    handleSeqAction();
-  }
-}
 
-// ═══════════════════════════════════════════════
-// PLUS/MINUS SEQUENCE — shared between plusminus & timelimit-seq
-// Config object tells it which DOM elements to use
-// ═══════════════════════════════════════════════
-let seqConfig = null;
-
-function prepareSeqQuestion(cfg) {
-  if (cfg) seqConfig = cfg;
-  seqRunning = false;
-  seqDone    = false;
-  seqQueue   = questionLog[currentQ].q.nums;
-  seqStep    = 0;
-
-  const { numElId, playingLblId, actionLblId, pbId, qcId, timerElId } = seqConfig;
-  const total = questionCount === Infinity ? '?' : questionCount;
-  document.getElementById(pbId).style.width =
-    questionCount === Infinity ? '0%' : ((currentQ / questionCount) * 100) + '%';
-  document.getElementById(qcId).textContent =
-    questionCount === Infinity ? `Q ${currentQ + 1}` : `Q ${currentQ + 1} / ${questionCount}`;
-  document.getElementById(timerElId).textContent = '0.0s';
-
-  const el = document.getElementById(numElId);
-  el.className = 'seq-number';
-  el.textContent = '';
-  document.getElementById(playingLblId).classList.remove('visible');
-  const isLast = (questionCount !== Infinity && currentQ === questionCount - 1);
-  document.getElementById(actionLblId).textContent = currentQ === 0 ? 'start' : (isLast ? 'finish test' : 'next question');
-}
-
-function handleSeqAction() {
-  if (seqRunning) return;
-
-  if (seqDone) {
-    stopTimer();
-    seqDone = false;
-    currentQ++;
-    // Check end conditions
-    if (questionCount !== Infinity && currentQ >= questionCount) {
-      showAnswerScreen();
-      return;
+    // ═══════════════════════════════════════════════
+    // TIME-LIMIT MULTIPLY sub-view
+    // ═══════════════════════════════════════════════
+    function renderTLMultiplyQuestion() {
+      document.getElementById('qc-timelimit').textContent = `Q ${currentQ + 1}`;
+      document.getElementById('timer-timelimit').textContent = '0.0s';
+      document.getElementById('tl-mul-waiting').style.display = 'none';
+      document.getElementById('tl-mul-question-wrap').style.display = 'block';
+      const entry = questionLog[currentQ];
+      const parts = entry.q.display.split(' ');
+      document.getElementById('tl-mul-question').innerHTML =
+        `${parts[0]} <span class="op">${parts[1]}</span> ${parts[2]}`;
+      document.getElementById('tl-action-label').textContent = 'next question';
     }
-    // Generate next question
-    pushNextQuestion();
-    prepareSeqQuestion();
-    // fall through to start the new sequence immediately
-  }
 
-  // Start sequence
-  if (mode === 'timelimit') beginCountdown();
-  beginTimer(seqConfig.timerElId);
-  seqRunning = true;
-  document.getElementById(seqConfig.actionLblId).textContent = 'playing…';
-  document.getElementById(seqConfig.playingLblId).classList.add('visible');
-  runSeqStep();
-}
+    function handleTLAction() {
+      if (tlSubMode === 'multiply') {
+        if (mulWaiting) {
+          // First press: show first question, start countdown and timer
+          mulWaiting = false;
+          beginCountdown();
+          renderTLMultiplyQuestion();
+          beginTimer('timer-timelimit');
+        } else {
+          // Space = record time + immediately show next question
+          stopTimer();
+          currentQ++;
+          pushNextQuestion();
+          renderTLMultiplyQuestion();
+          beginTimer('timer-timelimit');
+        }
+      } else {
+        // delegate to seq handler
+        handleSeqAction();
+      }
+    }
 
-function runSeqStep() {
-  const el = document.getElementById(seqConfig.numElId);
-  el.classList.remove('show');
+    // ═══════════════════════════════════════════════
+    // PLUS/MINUS SEQUENCE — shared between plusminus & timelimit-seq
+    // Config object tells it which DOM elements to use
+    // ═══════════════════════════════════════════════
+    let seqConfig = null;
 
-  if (seqStep >= seqQueue.length) {
-    seqRunning = false;
-    seqDone    = true;
-    document.getElementById(seqConfig.playingLblId).classList.remove('visible');
-    const isLast = (questionCount !== Infinity && currentQ === questionCount - 1);
-    document.getElementById(seqConfig.actionLblId).textContent = isLast ? 'finish test' : 'next question';
-    return;
-  }
+    function prepareSeqQuestion(cfg) {
+      if (cfg) seqConfig = cfg;
+      seqRunning = false;
+      seqDone = false;
+      seqQueue = questionLog[currentQ].q.nums;
+      seqStep = 0;
 
-  setTimeout(() => {
-    const item = seqQueue[seqStep];
-    el.className = 'seq-number';
-    if (seqStep === 0)       el.classList.add('op-first');
-    else if (item.op === '+') el.classList.add('op-plus');
-    else                      el.classList.add('op-minus');
-    el.textContent = seqStep === 0 ? item.value : (item.op + item.value);
-    el.classList.add('show');
-    seqStep++;
-    seqTimeout = setTimeout(runSeqStep, delayMs);
-  }, 220);
-}
+      const { numElId, playingLblId, actionLblId, pbId, qcId, timerElId } = seqConfig;
+      const total = questionCount === Infinity ? '?' : questionCount;
+      document.getElementById(pbId).style.width =
+        questionCount === Infinity ? '0%' : ((currentQ / questionCount) * 100) + '%';
+      document.getElementById(qcId).textContent =
+        questionCount === Infinity ? `Q ${currentQ + 1}` : `Q ${currentQ + 1} / ${questionCount}`;
+      document.getElementById(timerElId).textContent = '0.0s';
 
-// ═══════════════════════════════════════════════
-// ANSWERS SCREEN
-// ═══════════════════════════════════════════════
-function showAnswerScreen() {
-  testActive = false;
-  clearTimeout(seqTimeout);
-  liveTimerActive = false;
-  cancelAnimationFrame(liveTimerRAF);
-  cancelAnimationFrame(countdownRAF);
+      const el = document.getElementById(numElId);
+      el.className = 'seq-number';
+      el.textContent = '';
+      document.getElementById(playingLblId).classList.remove('visible');
+      const isLast = (questionCount !== Infinity && currentQ === questionCount - 1);
+      document.getElementById(actionLblId).textContent = currentQ === 0 ? 'start' : (isLast ? 'finish test' : 'next question');
+    }
 
-  showScreen('screen-answers');
-  const grid = document.getElementById('answers-grid');
-  grid.innerHTML = '';
-  for (let i = 0; i < questionLog.length; i++) {
-    const div = document.createElement('div');
-    div.className = 'answer-item';
-    div.innerHTML = `<span class="qlabel">Q${i + 1}:</span><input type="number" id="ans-${i}" placeholder="?">`;
-    grid.appendChild(div);
-  }
-  setTimeout(() => document.getElementById('ans-0')?.focus(), 300);
-}
+    function handleSeqAction() {
+      if (seqRunning) return;
 
-// ═══════════════════════════════════════════════
-// CHECK ANSWERS + RESULTS
-// ═══════════════════════════════════════════════
-function checkAnswers() {
-  let correct = 0;
-  for (let i = 0; i < questionLog.length; i++) {
-    const inp = document.getElementById('ans-' + i);
-    const given = inp ? parseInt(inp.value, 10) : NaN;
-    const isCorrect = given === questionLog[i].q.answer;
-    questionLog[i].given = given;
-    questionLog[i].isCorrect = isCorrect;
-    if (isCorrect) correct++;
-  }
+      if (seqDone) {
+        stopTimer();
+        seqDone = false;
+        currentQ++;
+        // Check end conditions
+        if (questionCount !== Infinity && currentQ >= questionCount) {
+          showAnswerScreen();
+          return;
+        }
+        // Generate next question
+        pushNextQuestion();
+        prepareSeqQuestion();
+        // fall through to start the new sequence immediately
+      }
 
-  showScreen('screen-results');
+      // Start sequence
+      if (mode === 'timelimit') beginCountdown();
+      beginTimer(seqConfig.timerElId);
+      seqRunning = true;
+      document.getElementById(seqConfig.actionLblId).textContent = 'playing…';
+      document.getElementById(seqConfig.playingLblId).classList.add('visible');
+      runSeqStep();
+    }
 
-  const total = questionLog.length;
-  const pct = Math.round((correct / total) * 100);
-  const circle = document.getElementById('score-circle');
-  circle.className = 'score-circle ' + (pct >= 80 ? 'score-great' : pct >= 50 ? 'score-ok' : 'score-bad');
-  document.getElementById('score-num').textContent = `${correct}/${total}`;
-  document.getElementById('score-label').textContent = pct + '%';
+    function runSeqStep() {
+      const el = document.getElementById(seqConfig.numElId);
+      el.classList.remove('show');
 
-  const msgs = pct >= 90 ? ['🌟 Incredible!', '🚀 Math Wizard!', '👑 Outstanding!']
-             : pct >= 70 ? ['💪 Great job!', '🔥 Well done!', '😎 Awesome!']
-             : pct >= 50 ? ['👍 Good effort!', '🌱 Keep going!', '💡 Getting there!']
-             : ['🤗 Keep practicing!', '📚 Try again!', '💪 You can do it!'];
-  document.getElementById('result-msg').textContent = msgs[Math.floor(Math.random() * msgs.length)];
+      if (seqStep >= seqQueue.length) {
+        seqRunning = false;
+        seqDone = true;
+        document.getElementById(seqConfig.playingLblId).classList.remove('visible');
+        const isLast = (questionCount !== Infinity && currentQ === questionCount - 1);
+        document.getElementById(seqConfig.actionLblId).textContent = isLast ? 'finish test' : 'next question';
+        return;
+      }
 
-  const times = questionLog.map(r => r.time).filter(t => t > 0);
-  const totalMs = times.reduce((a, b) => a + b, 0);
-  const avgMs   = times.length ? totalMs / times.length : 0;
-  const fast    = times.length ? Math.min(...times) : 0;
-  const slow    = times.length ? Math.max(...times) : 0;
+      setTimeout(() => {
+        const item = seqQueue[seqStep];
+        el.className = 'seq-number';
+        if (seqStep === 0) el.classList.add('op-first');
+        else if (item.op === '+') el.classList.add('op-plus');
+        else el.classList.add('op-minus');
+        el.textContent = seqStep === 0 ? item.value : (item.op + item.value);
+        el.classList.add('show');
+        seqStep++;
+        seqTimeout = setTimeout(runSeqStep, delayMs);
+      }, 220);
+    }
 
-  document.getElementById('res-total-time').textContent = fmtTime(totalMs);
-  document.getElementById('res-avg-time').textContent   = fmtTime(avgMs);
-  document.getElementById('res-fastest').textContent    = fmtTime(fast);
-  document.getElementById('res-slowest').textContent    = fmtTime(slow);
+    // ═══════════════════════════════════════════════
+    // ANSWERS SCREEN
+    // ═══════════════════════════════════════════════
+    function showAnswerScreen() {
+      testActive = false;
+      clearTimeout(seqTimeout);
+      liveTimerActive = false;
+      cancelAnimationFrame(liveTimerRAF);
+      cancelAnimationFrame(countdownRAF);
 
-  const list = document.getElementById('results-list');
-  list.innerHTML = '';
-  questionLog.forEach((r, i) => {
-    const row = document.createElement('div');
-    row.className = 'result-row ' + (r.isCorrect ? 'correct' : 'wrong');
-    const ansHtml = r.isCorrect
-      ? `<span class="their">✓ ${r.given}</span>`
-      : `<span class="their">${isNaN(r.given) ? '—' : r.given}</span>
+      showScreen('screen-answers');
+      const grid = document.getElementById('answers-grid');
+      grid.innerHTML = '';
+      for (let i = 0; i < questionLog.length; i++) {
+        const div = document.createElement('div');
+        div.className = 'answer-item';
+        div.innerHTML = `<span class="qlabel">Q${i + 1}:</span><input type="number" id="ans-${i}" placeholder="?">`;
+        grid.appendChild(div);
+      }
+      setTimeout(() => document.getElementById('ans-0')?.focus(), 300);
+    }
+
+    // ═══════════════════════════════════════════════
+    // CHECK ANSWERS + RESULTS
+    // ═══════════════════════════════════════════════
+    function checkAnswers() {
+      let correct = 0;
+      for (let i = 0; i < questionLog.length; i++) {
+        const inp = document.getElementById('ans-' + i);
+        const given = inp ? parseInt(inp.value, 10) : NaN;
+        const isCorrect = given === questionLog[i].q.answer;
+        questionLog[i].given = given;
+        questionLog[i].isCorrect = isCorrect;
+        if (isCorrect) correct++;
+      }
+
+      showScreen('screen-results');
+
+      const total = questionLog.length;
+      const pct = Math.round((correct / total) * 100);
+      const circle = document.getElementById('score-circle');
+      circle.className = 'score-circle ' + (pct >= 80 ? 'score-great' : pct >= 50 ? 'score-ok' : 'score-bad');
+      document.getElementById('score-num').textContent = `${correct}/${total}`;
+      document.getElementById('score-label').textContent = pct + '%';
+
+      const msgs = pct >= 90 ? ['🌟 Incredible!', '🚀 Math Wizard!', '👑 Outstanding!']
+        : pct >= 70 ? ['💪 Great job!', '🔥 Well done!', '😎 Awesome!']
+          : pct >= 50 ? ['👍 Good effort!', '🌱 Keep going!', '💡 Getting there!']
+            : ['🤗 Keep practicing!', '📚 Try again!', '💪 You can do it!'];
+      document.getElementById('result-msg').textContent = msgs[Math.floor(Math.random() * msgs.length)];
+
+      const times = questionLog.map(r => r.time).filter(t => t > 0);
+      const totalMs = times.reduce((a, b) => a + b, 0);
+      const avgMs = times.length ? totalMs / times.length : 0;
+      const fast = times.length ? Math.min(...times) : 0;
+      const slow = times.length ? Math.max(...times) : 0;
+
+      document.getElementById('res-total-time').textContent = fmtTime(totalMs);
+      document.getElementById('res-avg-time').textContent = fmtTime(avgMs);
+      document.getElementById('res-fastest').textContent = fmtTime(fast);
+      document.getElementById('res-slowest').textContent = fmtTime(slow);
+
+      const list = document.getElementById('results-list');
+      list.innerHTML = '';
+      questionLog.forEach((r, i) => {
+        const row = document.createElement('div');
+        row.className = 'result-row ' + (r.isCorrect ? 'correct' : 'wrong');
+        const ansHtml = r.isCorrect
+          ? `<span class="their">✓ ${r.given}</span>`
+          : `<span class="their">${isNaN(r.given) ? '—' : r.given}</span>
          <span style="color:var(--muted);font-size:0.75rem">→</span>
          <span class="real">${r.q.answer}</span>`;
-    row.innerHTML = `
+        row.innerHTML = `
       <span class="r-num">Q${i + 1}</span>
       <span class="r-ans">${ansHtml}</span>
       <span class="r-time">⏱ ${fmtTime(r.time)}</span>`;
-    list.appendChild(row);
-  });
-}
+        list.appendChild(row);
+      });
+    }
 
-// ═══════════════════════════════════════════════
-// UTILITIES
-// ═══════════════════════════════════════════════
-function fmtTime(ms) {
-  if (!ms) return '—';
-  const s = ms / 1000;
-  if (s < 60) return s.toFixed(1) + 's';
-  return Math.floor(s / 60) + 'm ' + (s % 60).toFixed(0) + 's';
-}
+    // ═══════════════════════════════════════════════
+    // UTILITIES
+    // ═══════════════════════════════════════════════
+    function fmtTime(ms) {
+      if (!ms) return '—';
+      const s = ms / 1000;
+      if (s < 60) return s.toFixed(1) + 's';
+      return Math.floor(s / 60) + 'm ' + (s % 60).toFixed(0) + 's';
+    }
 
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
 
-function goMenu() {
-  testActive = false;
-  liveTimerActive = false;
-  countdownStarted = false;
-  cancelAnimationFrame(liveTimerRAF);
-  cancelAnimationFrame(countdownRAF);
-  clearTimeout(seqTimeout);
-  seqRunning = false;
-  seqDone    = false;
-  mode       = null;
-  tlSubMode  = null;
-  questionCount = null;
-  timeLimitSec  = null;
-  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('selected'));
-  document.querySelectorAll('.opt-btn, .time-btn').forEach(b => b.classList.remove('selected'));
-  document.getElementById('custom-count-wrap').classList.remove('visible');
-  document.getElementById('custom-time-wrap').classList.remove('visible');
-  document.getElementById('custom-count-input').value = '';
-  document.getElementById('custom-time-input').value  = '';
-  document.getElementById('options-card').style.display = 'none';
-  document.getElementById('start-btn').disabled = true;
-  document.getElementById('countdown-timer').classList.remove('urgent');
-  showScreen('screen-menu');
-}
-</script>
+    function goMenu() {
+      testActive = false;
+      liveTimerActive = false;
+      countdownStarted = false;
+      cancelAnimationFrame(liveTimerRAF);
+      cancelAnimationFrame(countdownRAF);
+      clearTimeout(seqTimeout);
+      seqRunning = false;
+      seqDone = false;
+      mode = null;
+      tlSubMode = null;
+      questionCount = null;
+      timeLimitSec = null;
+      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('selected'));
+      document.querySelectorAll('.opt-btn, .time-btn').forEach(b => b.classList.remove('selected'));
+      document.getElementById('custom-count-wrap').classList.remove('visible');
+      document.getElementById('custom-time-wrap').classList.remove('visible');
+      document.getElementById('custom-count-input').value = '';
+      document.getElementById('custom-time-input').value = '';
+      document.getElementById('options-card').style.display = 'none';
+      document.getElementById('start-btn').disabled = true;
+      document.getElementById('countdown-timer').classList.remove('urgent');
+      showScreen('screen-menu');
+    }
+  </script>
 </body>
+
 </html>
